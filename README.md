@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mister 8 Tournament League
 
-## Getting Started
+Plateforme officielle de la ligue compétitive de Mister 8 TCG (Courbevoie) :
+tournois One Piece Card Game & Riftbound, classement de saison, qualification
+pour la grande finale.
 
-First, run the development server:
+## Lancer le site en local
+
+Node est installé localement dans `~/.local/node22` (pas d'installation système).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+export PATH="$HOME/.local/node22/bin:$PATH"
+npm run dev        # http://localhost:3000
+npm run build      # build de production
+npx tsc --noEmit   # vérification TypeScript
+node --experimental-strip-types scripts/test-bandai-csv.ts  # tests du parseur CSV
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Le site tourne actuellement en **mode démo** : les données viennent de
+`src/lib/data/seed.ts`. Aucun service externe n'est requis.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Brancher Supabase (à faire pour la mise en ligne)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Créer un projet sur [supabase.com](https://supabase.com) (région `eu-west-3` Paris).
+2. Exécuter les migrations dans l'éditeur SQL, dans l'ordre :
+   `supabase/migrations/0001_schema.sql` puis `0002_seed.sql`.
+3. Créer `.env.local` :
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=…
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=…
+   ```
+4. Basculer les fonctions de `src/lib/data/index.ts` sur les vues SQL
+   (`season_standings`, `event_metagame`, `player_deck_stats`) — les
+   signatures sont déjà prêtes.
 
-## Learn More
+## Import des résultats (Bandai TCG+)
 
-To learn more about Next.js, take a look at the following resources:
+L'export CSV « Classement final » de Bandai TCG+ est parsé par
+`src/lib/bandai-csv.ts` :
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- matching des joueurs par **numéro de membre Bandai** (clé stable) ;
+- bilan V-N-D déduit des « Points gagnants » (3/victoire) et du nombre de rondes ;
+- OMW % / OOMW % conservés comme tiebreakers ;
+- points de ligue attribués selon le barème configurable de la saison
+  (côté SQL : fonction `compute_league_points` + trigger sur `results`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Le leader joué n'est **pas** dans l'export Bandai : il se complète dans
+l'admin après import (nécessaire pour le métagame).
 
-## Deploy on Vercel
+## Design
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deux ambiances issues de la direction retenue :
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **« Le Club »** (base) — fond charbon `#2B2A29`/`#221F1C`, données en or
+  paille `#F6C36B`, rouge `#E8392B` réservé à l'action et à la ligne de coupe.
+  Typo : Fraunces (display) + Inter.
+- **« L'Affiche »** (pages vitrines) — papier crème `#F6EEDC`, cadres doubles,
+  rouge affiche `#C9331F`, typo Bevan. Utilisée sur le mode d'emploi, les
+  cartes d'événements à venir et le règlement.
+
+Tokens dans `src/app/globals.css` (Tailwind v4, `@theme`).
+
+## Reste à faire (voir phases)
+
+- **Phase 1** : auth Supabase (e-mail + Google), vrai espace joueur, admin
+  (CRUD événements, import CSV, matching/fusion joueurs, barème).
+- **Phase 2** : decklists top 8, stats avancées, statut de qualification temps réel.
+- **Phase 3** : notifications e-mail, badges, page finale de saison.
