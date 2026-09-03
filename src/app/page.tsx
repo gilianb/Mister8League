@@ -26,6 +26,20 @@ export default async function Home() {
     <>
       {/* ---------- Héros « Le Club » ---------- */}
       <section className="relative overflow-hidden">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/ambiance/hero-bg.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover object-[50%_30%] opacity-[0.13] pointer-events-none"
+        />
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "linear-gradient(to bottom, rgba(34,31,28,.55), rgba(34,31,28,.25) 40%, #221f1c 96%)",
+          }}
+        />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
