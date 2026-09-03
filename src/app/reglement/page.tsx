@@ -168,6 +168,24 @@ export default async function ReglementPage() {
             </li>
           </ul>
         </section>
+
+        <section className="mt-8">
+          <h2 className="font-poster text-poster text-xl mb-3">
+            6. Données personnelles
+          </h2>
+          <p className="text-sm leading-relaxed text-ink-600">
+            En participant à un tournoi Mister 8, vous acceptez que votre
+            pseudo et vos résultats (placement, points, leader et decklist
+            déclarés) soient publiés sur le site de la ligue. Votre e-mail et
+            votre numéro de membre Bandai ne sont jamais rendus publics. Vous
+            pouvez demander à tout moment le retrait ou l&apos;anonymisation
+            de vos données — détails dans notre{" "}
+            <a href="/confidentialite" className="font-semibold text-poster underline">
+              politique de confidentialité
+            </a>
+            .
+          </p>
+        </section>
       </div>
     </div>
   );

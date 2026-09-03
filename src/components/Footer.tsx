@@ -20,6 +20,7 @@ export default function Footer() {
             <li><Link href="/calendrier" className="hover:text-gold-400">Calendrier des tournois</Link></li>
             <li><Link href="/classement" className="hover:text-gold-400">Classement de la saison</Link></li>
             <li><Link href="/reglement" className="hover:text-gold-400">Règlement</Link></li>
+            <li><Link href="/confidentialite" className="hover:text-gold-400">Politique de confidentialité</Link></li>
           </ul>
         </div>
         <div className="text-sm">
