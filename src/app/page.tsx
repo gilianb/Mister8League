@@ -31,13 +31,13 @@ export default async function Home() {
           src="/ambiance/hero-bg.jpg"
           alt=""
           aria-hidden="true"
-          className="absolute inset-0 h-full w-full object-cover object-[50%_30%] opacity-[0.13] pointer-events-none"
+          className="absolute inset-0 h-full w-full object-cover object-[30%_88%] opacity-[0.18] pointer-events-none"
         />
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(34,31,28,.55), rgba(34,31,28,.25) 40%, #221f1c 96%)",
+              "linear-gradient(to bottom, rgba(34,31,28,.5), rgba(34,31,28,.15) 45%, #221f1c 100%)",
           }}
         />
         <div
