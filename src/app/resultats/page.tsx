@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import GameTabs from "@/components/GameTabs";
+import PageBackdrop from "@/components/PageBackdrop";
 import { getPastEvents } from "@/lib/data";
 import { formatDateShort } from "@/lib/format";
 
@@ -20,7 +21,9 @@ export default async function ResultatsPage({ searchParams }: Props) {
   const events = past.filter((e) => e.gameSlug === game);
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
+    <div className="relative">
+      <PageBackdrop src="/ambiance/bg-resultats.jpg" position="50% 20%" />
+      <div className="relative mx-auto max-w-4xl px-4 py-12">
       <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream-100 mb-2">
         Résultats de nos tournois
       </h1>
@@ -66,6 +69,7 @@ export default async function ResultatsPage({ searchParams }: Props) {
           </p>
         </div>
       )}
+    </div>
     </div>
   );
 }

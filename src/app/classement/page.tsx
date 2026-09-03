@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import GameTabs from "@/components/GameTabs";
+import PageBackdrop from "@/components/PageBackdrop";
 import StandingsTable from "@/components/StandingsTable";
 import { getActiveSeason, getStandings, getPastEvents } from "@/lib/data";
 
@@ -24,7 +25,9 @@ export default async function ClassementPage({ searchParams }: Props) {
   const nextRiftbound = "13 septembre 2026";
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
+    <div className="relative">
+      <PageBackdrop src="/ambiance/bg-classement.jpg" position="60% 35%" />
+      <div className="relative mx-auto max-w-4xl px-4 py-12">
       <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream-100 mb-6">
         Classement de la ligue
       </h1>
@@ -60,6 +63,7 @@ export default async function ClassementPage({ searchParams }: Props) {
           </p>
         </div>
       )}
+    </div>
     </div>
   );
 }

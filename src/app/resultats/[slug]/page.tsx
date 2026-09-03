@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import LeaderChip from "@/components/LeaderChip";
+import PageBackdrop from "@/components/PageBackdrop";
 import MetagameDonut from "@/components/MetagameDonut";
 import {
   getEventBySlug,
@@ -39,7 +40,9 @@ export default async function ResultatDetailPage({ params }: Props) {
   ]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12">
+    <div className="relative">
+      <PageBackdrop src="/ambiance/bg-resultats.jpg" position="50% 20%" />
+      <div className="relative mx-auto max-w-5xl px-4 py-12">
       <Link href="/resultats" className="text-sm text-cream-600 hover:text-gold-400">
         ← Tous les résultats
       </Link>
@@ -112,6 +115,7 @@ export default async function ResultatDetailPage({ params }: Props) {
           prochainement.
         </p>
       </section>
+    </div>
     </div>
   );
 }
