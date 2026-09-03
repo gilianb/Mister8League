@@ -35,14 +35,14 @@ export default function Countdown({
   if (time === "today") {
     return (
       <p className="text-sm font-semibold text-gold-400 tracking-wide">
-        C&apos;est aujourd&apos;hui — bonne chance à tous !
+        C&apos;est aujourd&apos;hui, bonne chance à tous !
       </p>
     );
   }
   if (time === "over") {
     return (
       <p className="text-sm font-semibold text-cream-600 tracking-wide">
-        Tournoi terminé — résultats bientôt en ligne.
+        Tournoi terminé. Résultats bientôt en ligne.
       </p>
     );
   }

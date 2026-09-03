@@ -30,7 +30,7 @@ export default async function JoueurPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <p className="mb-8 rounded-lg border border-gold-400/30 bg-gold-400/10 px-4 py-2.5 text-xs text-gold-300">
-        Aperçu de démonstration — vos vraies stats apparaîtront ici une fois
+        Aperçu de démonstration : vos vraies stats apparaîtront ici une fois
         votre compte créé et votre numéro de membre Bandai renseigné.
       </p>
 
@@ -56,7 +56,7 @@ export default async function JoueurPage() {
             QUALIFICATION FINALE
           </h2>
           <p className={`text-sm font-bold tracking-wide ${qualified ? "text-gold-400" : "text-cream-100"}`}>
-            {placementLabel(player.rank)} au classement —{" "}
+            {placementLabel(player.rank)} au classement ·{" "}
             {qualified
               ? "qualifié provisoirement"
               : `à ${pointsGap} pts du top ${player.qualifiedCount}`}
@@ -116,7 +116,7 @@ export default async function JoueurPage() {
                 style={{ height: `${Math.max(8, (h.leaguePoints / maxHistPoints) * 80)}px` }}
               />
               <span className="text-[9px] text-cream-600 truncate max-w-full">
-                {h.eventName.split("—")[1]?.trim() ?? h.eventName}
+                {h.eventName.replace(/Tournoi (One Piece|Riftbound)\s*/, "")}
               </span>
             </div>
           ))}

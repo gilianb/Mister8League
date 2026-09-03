@@ -23,7 +23,7 @@ const bevan = Bevan({
 export const metadata: Metadata = {
   title: {
     default: "Mister 8 Tournament League",
-    template: "%s — Mister 8 Tournament League",
+    template: "%s · Mister 8 Tournament League",
   },
   description:
     "Le circuit compétitif de Mister 8 TCG à Courbevoie : tournois One Piece Card Game et Riftbound, classement de saison et qualification pour la grande finale.",

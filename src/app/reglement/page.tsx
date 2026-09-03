@@ -15,7 +15,7 @@ export default async function ReglementPage() {
     <div className="bg-paper text-ink py-14 px-4 min-h-full">
       <div className="mx-auto max-w-3xl poster-frame bg-paper-50 px-6 sm:px-12 py-12">
         <p className="text-center text-[10px] tracking-[0.3em] text-poster font-extrabold mb-3">
-          MISTER 8 TCG · SAISON 1 — 2026/2027
+          MISTER 8 TCG · SAISON 1 · 2026/2027
         </p>
         <h1 className="font-poster text-3xl sm:text-4xl text-center leading-tight text-balance">
           Règlement de la Ligue Mister 8 Tournament
@@ -164,7 +164,7 @@ export default async function ReglementPage() {
             <li>
               <strong className="text-ink">Remboursements :</strong> possibles
               jusqu&apos;à la veille du tournoi. Le jour du tournoi, aucun
-              remboursement — y compris en cas d&apos;absence sans prévenir.
+              remboursement, y compris en cas d&apos;absence sans prévenir.
             </li>
           </ul>
         </section>
@@ -179,7 +179,7 @@ export default async function ReglementPage() {
             déclarés) soient publiés sur le site de la ligue. Votre e-mail et
             votre numéro de membre Bandai ne sont jamais rendus publics. Vous
             pouvez demander à tout moment le retrait ou l&apos;anonymisation
-            de vos données — détails dans notre{" "}
+            de vos données. Détails dans notre{" "}
             <a href="/confidentialite" className="font-semibold text-poster underline">
               politique de confidentialité
             </a>

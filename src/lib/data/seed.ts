@@ -14,7 +14,7 @@ import type {
 
 export const season: Season = {
   slug: "saison-1",
-  name: "Saison 1 — 2026/2027",
+  name: "Saison 1 · 2026/2027",
   gameName: "One Piece Card Game",
   qualifiedCount: 16,
   status: "active",
@@ -23,7 +23,7 @@ export const season: Season = {
 export const events: LeagueEvent[] = [
   {
     slug: "op16-septembre-2026",
-    name: "Tournoi One Piece — OP16",
+    name: "Tournoi One Piece OP16",
     gameSlug: "one-piece",
     gameName: "One Piece Card Game",
     startsAt: "2026-09-27T14:00:00+02:00",
@@ -37,7 +37,7 @@ export const events: LeagueEvent[] = [
   },
   {
     slug: "op16-aout-2026",
-    name: "Tournoi One Piece — OP16",
+    name: "Tournoi One Piece OP16",
     gameSlug: "one-piece",
     gameName: "One Piece Card Game",
     startsAt: "2026-08-30T14:00:00+02:00",
@@ -50,7 +50,7 @@ export const events: LeagueEvent[] = [
   },
   {
     slug: "riftbound-aout-2026",
-    name: "Tournoi Riftbound — Constructed",
+    name: "Tournoi Riftbound Constructed",
     gameSlug: "riftbound",
     gameName: "Riftbound TCG",
     startsAt: "2026-09-13T10:00:00+02:00",
@@ -64,7 +64,7 @@ export const events: LeagueEvent[] = [
   },
   {
     slug: "op15-juin-2026",
-    name: "Tournoi One Piece — OP15",
+    name: "Tournoi One Piece OP15",
     gameSlug: "one-piece",
     gameName: "One Piece Card Game",
     startsAt: "2026-06-14T14:00:00+02:00",
@@ -77,7 +77,7 @@ export const events: LeagueEvent[] = [
   },
   {
     slug: "op14-eb04-mai-2026",
-    name: "Tournoi One Piece — OP14 + EB04",
+    name: "Tournoi One Piece OP14 + EB04",
     gameSlug: "one-piece",
     gameName: "One Piece Card Game",
     startsAt: "2026-05-10T14:00:00+02:00",
@@ -187,7 +187,7 @@ export const demoPlayer: PlayerDashboard = {
   history: [
     {
       eventSlug: "op16-aout-2026",
-      eventName: "Tournoi One Piece — OP16",
+      eventName: "Tournoi One Piece OP16",
       date: "2026-08-30",
       placement: 4,
       wins: 5,
@@ -198,7 +198,7 @@ export const demoPlayer: PlayerDashboard = {
     },
     {
       eventSlug: "op15-juin-2026",
-      eventName: "Tournoi One Piece — OP15",
+      eventName: "Tournoi One Piece OP15",
       date: "2026-06-14",
       placement: 11,
       wins: 4,
@@ -209,7 +209,7 @@ export const demoPlayer: PlayerDashboard = {
     },
     {
       eventSlug: "op14-eb04-mai-2026",
-      eventName: "Tournoi One Piece — OP14 + EB04",
+      eventName: "Tournoi One Piece OP14 + EB04",
       date: "2026-05-10",
       placement: 35,
       wins: 3,

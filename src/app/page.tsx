@@ -176,7 +176,7 @@ export default async function Home() {
               <p className="font-poster text-poster text-lg mb-2">3. Qualifiez-vous</p>
               <p className="text-sm text-ink-600">
                 Les {season.qualifiedCount} premiers du classement décrochent
-                leur place pour la grande finale de saison — titre, lot et
+                leur place pour la grande finale de saison : titre, lot et
                 gloire éternelle au club.
               </p>
             </div>

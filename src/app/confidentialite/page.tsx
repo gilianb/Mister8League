@@ -56,7 +56,7 @@ const sections = [
     body: (
       <>
         Seuls votre <strong className="text-ink">pseudo</strong> et vos{" "}
-        <strong className="text-ink">résultats sportifs</strong> (placement,
+        <strong className="text-ink">résultats</strong> (placement,
         points, leader joué, decklist déclarée) apparaissent publiquement sur
         les pages classement et résultats. Votre e-mail et votre numéro de
         membre Bandai ne sont <strong className="text-ink">jamais publiés</strong>.
@@ -69,8 +69,8 @@ const sections = [
     body: (
       <>
         Conformément au RGPD, vous pouvez demander à tout moment
-        l&apos;accès, la rectification ou la suppression de vos données —
-        y compris le retrait de votre pseudo des classements publics (vos
+        l&apos;accès, la rectification ou la suppression de vos données, y
+        compris le retrait de votre pseudo des classements publics (vos
         résultats sont alors anonymisés pour ne pas fausser le classement
         des autres joueurs) et le retrait d&apos;une photo où vous
         apparaissez. Il suffit d&apos;un message privé Instagram. Pour les

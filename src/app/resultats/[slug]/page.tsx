@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const event = await getEventBySlug(slug);
   if (!event) return {};
   return {
-    title: `Résultats — ${event.name}`,
+    title: `Résultats · ${event.name}`,
     description: `Classement final du tournoi ${event.name} (${event.formatLabel}) de la Mister 8 Tournament League.`,
   };
 }

@@ -93,7 +93,7 @@ export default function StandingsTable({
       {qualifiedCount !== undefined && rows.length >= qualifiedCount && (
         <p className="mt-2 flex items-center gap-2 text-xs text-cream-600">
           <span className="inline-block w-6 border-t-2 border-brand" />
-          Ligne de qualification — top {qualifiedCount} qualifié pour la finale de saison
+          Ligne de qualification : top {qualifiedCount} qualifié pour la finale de saison
         </p>
       )}
     </div>

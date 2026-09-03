@@ -62,7 +62,7 @@ export default async function ResultatsPage({ searchParams }: Props) {
           </h2>
           <p className="text-sm text-cream-400 max-w-[52ch] mx-auto">
             Les résultats des tournois Riftbound apparaîtront ici après le
-            prochain événement — dimanche 13 septembre 2026 à Courbevoie.
+            prochain événement, dimanche 13 septembre 2026 à Courbevoie.
           </p>
         </div>
       )}

@@ -56,7 +56,7 @@ export default async function ClassementPage({ searchParams }: Props) {
           <p className="text-sm text-cream-400 max-w-[52ch] mx-auto">
             Les tournois Riftbound ne rapportent pas encore de points de
             ligue. Rejoignez-nous au prochain tournoi le {nextRiftbound} à
-            Courbevoie — inscription sur mister-8.com.
+            Courbevoie. Inscription sur mister-8.com.
           </p>
         </div>
       )}

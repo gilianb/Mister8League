@@ -48,7 +48,7 @@ export default async function CalendrierPage() {
             <h3 className="font-poster text-2xl mt-3 leading-snug">{e.name}</h3>
             <p className={`mt-1 text-[11px] font-semibold tracking-wide ${isRift ? "text-rift-600" : "text-poster"}`}>
               {isRift
-                ? "Hors ligue — ne compte pas pour le classement"
+                ? "Hors ligue : ne compte pas pour le classement"
                 : "Compte pour la ligue One Piece"}
             </p>
             <dl className="mt-4 space-y-1.5 text-sm">
@@ -82,7 +82,7 @@ export default async function CalendrierPage() {
                 rel="noopener noreferrer"
                 className={`mt-6 block text-paper-50 text-center font-bold py-3 tracking-wide hover:brightness-110 transition ${isRift ? "bg-rift-600" : "bg-poster"}`}
               >
-                S&apos;INSCRIRE — {e.priceEuros} €
+                S&apos;INSCRIRE · {e.priceEuros} €
               </a>
             )}
           </article>

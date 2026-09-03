@@ -28,12 +28,12 @@ export default function Footer() {
           <ul className="space-y-2 text-cream-400">
             <li>
               <a href="https://www.instagram.com/mister8tournament" target="_blank" rel="noopener noreferrer" className="hover:text-gold-400">
-                Instagram — @mister8tournament
+                Instagram : @mister8tournament
               </a>
             </li>
             <li>
               <a href="https://mister-8.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold-400">
-                Boutique &amp; billetterie — mister-8.com
+                Boutique &amp; billetterie : mister-8.com
               </a>
             </li>
           </ul>
@@ -41,7 +41,7 @@ export default function Footer() {
       </div>
       <div className="border-t hairline">
         <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-cream-600">
-          © {new Date().getFullYear()} Mister 8 TCG — Courbevoie. One Piece Card Game est une marque de Bandai.
+          © {new Date().getFullYear()} Mister 8 TCG, Courbevoie. One Piece Card Game est une marque de Bandai.
         </p>
       </div>
     </footer>
