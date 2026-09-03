@@ -60,3 +60,26 @@ body {
 .tabular {
   font-variant-numeric: tabular-nums;
 }
+
+/* Bandeau photo défilant (accueil) */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 80s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+  }
+  .marquee-track {
+    animation: none;
+  }
+}

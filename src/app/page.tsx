@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AmbianceCarousel from "@/components/AmbianceCarousel";
 import Countdown from "@/components/Countdown";
 import StandingsTable from "@/components/StandingsTable";
 import {
@@ -142,6 +143,9 @@ export default async function Home() {
         </div>
         <StandingsTable rows={top8} compact />
       </section>
+
+      {/* ---------- Photos d'ambiance ---------- */}
+      <AmbianceCarousel />
 
       {/* ---------- Section « L'Affiche » : mode d'emploi ---------- */}
       <section className="bg-paper text-ink py-14 px-4">
