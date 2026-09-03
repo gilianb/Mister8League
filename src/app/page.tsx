@@ -131,6 +131,9 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ---------- Photos d'ambiance ---------- */}
+      <AmbianceCarousel />
+
       {/* ---------- Top 8 ---------- */}
       <section className="mx-auto max-w-6xl px-4 py-10">
         <div className="flex items-baseline justify-between mb-4">
@@ -143,9 +146,6 @@ export default async function Home() {
         </div>
         <StandingsTable rows={top8} compact />
       </section>
-
-      {/* ---------- Photos d'ambiance ---------- */}
-      <AmbianceCarousel />
 
       {/* ---------- Section « L'Affiche » : mode d'emploi ---------- */}
       <section className="bg-paper text-ink py-14 px-4">
