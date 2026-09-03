@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getUpcomingEvents, getPastEvents } from "@/lib/data";
-import PageBackdrop from "@/components/PageBackdrop";
 import { formatDateLong, formatDateShort, formatTime } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -17,9 +16,7 @@ export default async function CalendrierPage() {
   ]);
 
   return (
-    <div className="relative">
-      <PageBackdrop src="/ambiance/bg-calendrier.jpg" position="50% 25%" />
-      <div className="relative mx-auto max-w-6xl px-4 py-12">
+    <div className="mx-auto max-w-6xl px-4 py-12">
       <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream-100 mb-2">
         Calendrier des tournois
       </h1>
@@ -117,7 +114,6 @@ export default async function CalendrierPage() {
           </li>
         ))}
       </ul>
-    </div>
     </div>
   );
 }
