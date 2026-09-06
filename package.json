@@ -9,14 +9,21 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@mollie/api-client": "^4.6.0",
+    "@supabase/ssr": "^0.12.6",
     "@supabase/supabase-js": "^2.114.0",
     "next": "16.2.10",
+    "nodemailer": "^10.0.0",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/nodemailer": "^8.0.1",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
