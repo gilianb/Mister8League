@@ -1,68 +1,154 @@
 # Mister 8 Tournament League
 
-Plateforme officielle de la ligue compétitive de Mister 8 TCG (Courbevoie) :
-tournois One Piece Card Game & Riftbound, classement de saison, qualification
-pour la grande finale.
+Plateforme de la ligue compétitive de Mister 8 TCG (Courbevoie) : comptes
+joueurs, inscription en ligne aux tournois One Piece Card Game (paiement
+Mollie, billet PDF avec QR code), import des résultats Bandai TCG+,
+classement de ligue par saison, espaces joueurs et administration.
+
+Stack : Next.js 16 (App Router, Server Actions), Supabase (Postgres, Auth,
+Storage), Tailwind v4, Mollie, nodemailer, pdf-lib.
 
 ## Lancer le site en local
 
-Node est installé localement dans `~/.local/node22` (pas d'installation système).
-
 ```bash
-export PATH="$HOME/.local/node22/bin:$PATH"
-npm run dev        # http://localhost:3000
-npm run build      # build de production
-npx tsc --noEmit   # vérification TypeScript
-node --experimental-strip-types scripts/test-bandai-csv.ts  # tests du parseur CSV
+npm install
+cp .env.example .env.local      # puis renseigner les valeurs (voir ci-dessous)
+npm run dev                     # http://localhost:3000
+npm test                        # tests unitaires (parseur CSV, barème, rapprochement…)
+npm run typecheck               # tsc --noEmit
+npm run lint
+npm run build
 ```
 
-Le site tourne actuellement en **mode démo** : les données viennent de
-`src/lib/data/seed.ts`. Aucun service externe n'est requis.
+Sans `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`, le site
+affiche une page « Configuration requise » qui liste les variables manquantes.
 
-## Brancher Supabase (à faire pour la mise en ligne)
+## Variables d'environnement
 
-1. Créer un projet sur [supabase.com](https://supabase.com) (région `eu-west-3` Paris).
-2. Exécuter les migrations dans l'éditeur SQL, dans l'ordre :
-   `supabase/migrations/0001_schema.sql` puis `0002_seed.sql`.
-3. Créer `.env.local` :
+| Variable | Rôle |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | URL publique du site (liens des e-mails, retour Mollie, QR des billets) |
+| `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | projet Supabase (Settings → API) |
+| `SUPABASE_SERVICE_ROLE_KEY` | clé service role, serveur uniquement |
+| `MOLLIE_API_KEY` | `test_…` en développement, `live_…` en production |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE` | envoi des e-mails (billet, notifications) |
+| `EMAIL_TOURNAMENT_FROM` | expéditeur no-reply |
+| `EMAIL_TOURNAMENT_REPLY_TO` | adresse de réponse affichée (tournois uniquement) |
+| `EMAIL_TOURNAMENT_ADMIN_TO` | boîte notifiée à chaque inscription payée |
+
+## Mise en service Supabase
+
+1. Créer un projet (région Paris `eu-west-3`).
+2. Éditeur SQL : exécuter dans l'ordre `supabase/migrations/0001_schema.sql`,
+   `0002_seed.sql` (jeu One Piece, saison 2026/2027 active, barème
+   15/10/8/6/4/2/1), `0003_leaders.sql` (catalogue des leaders avec visuels).
+   Les scripts sont idempotents. Ils créent aussi les buckets Storage
+   (`tournament-tickets` privé, `avatars` et `event-covers` publics).
+3. **Authentication → URL Configuration** : `Site URL` = votre
+   `NEXT_PUBLIC_SITE_URL`, et ajouter `https://votre-site/**` (et
+   `http://localhost:3000/**`) aux Redirect URLs.
+4. **Authentication → Email Templates** (recommandé, plus robuste que le lien
+   par défaut) :
+   - *Confirm signup* :
+     `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=signup&next=/joueur`
+   - *Reset password* :
+     `{{ .SiteURL }}/auth/confirm?token_hash={{ .TokenHash }}&type=recovery&next=/connexion/nouveau-mot-de-passe`
+   - *Magic link / change email* : même schéma avec `type=magiclink` /
+     `type=email_change`.
+
+   Le lien `{{ .ConfirmationURL }}` par défaut fonctionne aussi (il arrive sur
+   `/auth/callback`), mais impose d'ouvrir l'e-mail dans le navigateur qui a
+   fait la demande.
+5. Créer votre compte sur le site, puis le promouvoir admin :
+
+   ```sql
+   update public.profiles set role = 'admin' where pseudo = 'VotrePseudo';
    ```
-   NEXT_PUBLIC_SUPABASE_URL=…
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=…
-   ```
-4. Basculer les fonctions de `src/lib/data/index.ts` sur les vues SQL
-   (`season_standings`, `event_metagame`, `player_deck_stats`) — les
-   signatures sont déjà prêtes.
 
-## Import des résultats (Bandai TCG+)
+6. Dans l'admin : vérifier la saison et le barème (`/admin/saisons`), créer le
+   premier tournoi (`/admin/tournois/nouveau`), le publier.
 
-L'export CSV « Classement final » de Bandai TCG+ est parsé par
-`src/lib/bandai-csv.ts` :
+## Mollie
 
-- matching des joueurs par **numéro de membre Bandai** (clé stable) ;
-- bilan V-N-D déduit des « Points gagnants » (3/victoire) et du nombre de rondes ;
-- OMW % / OOMW % conservés comme tiebreakers ;
-- points de ligue attribués selon le barème configurable de la saison
-  (côté SQL : fonction `compute_league_points` + trigger sur `results`).
+- Créer un profil de site sur Mollie, récupérer la clé API test puis live.
+- Le webhook est `POST {NEXT_PUBLIC_SITE_URL}/api/mollie/webhook` (renseigné
+  automatiquement à chaque paiement). En local, exposer le serveur avec un
+  tunnel (`ngrok http 3000` ou `cloudflared tunnel`), et mettre cette URL dans
+  `NEXT_PUBLIC_SITE_URL` le temps des tests.
+- Les factures sont créées via l'API *Sales Invoices* (TVA 20 % incluse,
+  statut brouillon) quand l'adresse de facturation est renseignée. Elles sont
+  visibles dans le dashboard Mollie et sur la page de confirmation du joueur.
+- Les remboursements se font depuis le dashboard Mollie ; côté site, l'admin
+  marque l'inscription « remboursée » pour libérer la place.
 
-Le leader joué n'est **pas** dans l'export Bandai : il se complète dans
-l'admin après import (nécessaire pour le métagame).
+## Parcours et fonctionnement
+
+### Comptes
+`/connexion` : inscription avec pseudo, nom complet, e-mail, mot de passe et
+**numéro de membre Bandai** (obligatoire : c'est la clé qui relie les résultats
+Bandai TCG+ au compte). Un trigger crée le profil, un second rattache
+l'identité ligue (`players`) dès que le numéro Bandai est connu.
+
+### Tournois et inscription
+- Fiche `/tournois/[slug]`, inscription `/tournois/[slug]/inscription`
+  (participant, deck / leader déclaré facultatif, adresse de facturation).
+- La place est réservée 15 min par la fonction SQL `reserve_seat` (verrou sur
+  l'événement, capacité, doublons), puis le paiement Mollie est créé.
+- Le webhook confirme le paiement, crée la facture, génère le billet PDF
+  (QR → `/billet/[token]`) dans le bucket privé et envoie les e-mails
+  (joueur avec PDF, admin). La page de retour vérifie aussi le paiement
+  directement, au cas où le webhook tarde.
+- Tournoi gratuit (0 €) : confirmation immédiate sans Mollie.
+- Check-in : scanner le QR du billet avec un compte admin, ou depuis
+  `/admin/tournois/[id]/participants` (liste, recherche, cash, export CSV,
+  renvoi du billet, remboursement).
+
+### Résultats et classement
+- `/admin/tournois/[id]/resultats` : importer l'export CSV « Classement
+  final » de Bandai TCG+ (colonnes Classement, Numéro de membre, Nom du
+  joueur, Points gagnés, OMW %, OOMW % ; BOM, `;`, accents cassés et colonnes
+  Memo / Deck URLs tolérés). Le nombre de rondes est déduit du meilleur score
+  s'il n'est pas saisi (3 points par victoire).
+- Rapprochement automatique : joueur connu (numéro Bandai) → inscrit du
+  tournoi (numéro Bandai du profil) → sinon « à résoudre » (lier à un
+  inscrit, à un joueur existant, créer un joueur sans compte, ignorer). Le
+  leader est prérempli depuis le deck déclaré à l'inscription et modifiable.
+- « Publier » remplace les résultats du tournoi, calcule les points selon le
+  barème de la saison, passe le tournoi en « terminé » : classement
+  (`/classement?saison=…`), page de résultats avec camembert des leaders,
+  espaces joueurs et profils publics sont mis à jour.
+- `/admin/joueurs` : rattacher un joueur importé à un compte, corriger un
+  numéro Bandai, fusionner deux identités.
+
+### Espace joueur
+`/joueur` (statut de qualification, stats, historique, inscriptions, decks),
+`/joueur/profil`, `/joueur/decks`, `/joueur/inscriptions`, profil public
+`/joueurs/[pseudo]` (désactivable dans le profil).
+
+## Structure du code
+
+```
+src/app/                  pages (public, connexion, joueur, admin, api)
+src/components/           UI (kit dans ui/, composants métier, admin/)
+src/lib/auth/             session, actions, validation
+src/lib/db/               requêtes typées (types.ts = miroir du schéma)
+src/lib/league/           parseur Bandai, barème, rapprochement, import
+src/lib/tournaments/      états, réservation/paiement (actions), billet PDF, check-in
+src/lib/payments/         Mollie, factures, fulfil (facture + billet + e-mails)
+src/lib/email/            SMTP, gabarits
+src/lib/admin/            actions admin (tournois, inscriptions, résultats, saisons, joueurs)
+supabase/migrations/      schéma complet, seed, leaders
+tests/                    tests node:test des modules purs
+```
 
 ## Design
 
-Deux ambiances issues de la direction retenue :
+Deux ambiances (voir `src/app/globals.css`, Tailwind v4 `@theme`) :
+« Le Club » (charbon, or paille, rouge action, Fraunces + Inter) pour les
+pages applicatives, « L'Affiche » (papier crème, rouge affiche, Bevan) pour
+les fiches de tournoi, billets et règlement.
 
-- **« Le Club »** (base) — fond charbon `#2B2A29`/`#221F1C`, données en or
-  paille `#F6C36B`, rouge `#E8392B` réservé à l'action et à la ligne de coupe.
-  Typo : Fraunces (display) + Inter.
-- **« L'Affiche »** (pages vitrines) — papier crème `#F6EEDC`, cadres doubles,
-  rouge affiche `#C9331F`, typo Bevan. Utilisée sur le mode d'emploi, les
-  cartes d'événements à venir et le règlement.
+## Suites possibles
 
-Tokens dans `src/app/globals.css` (Tailwind v4, `@theme`).
-
-## Reste à faire (voir phases)
-
-- **Phase 1** : auth Supabase (e-mail + Google), vrai espace joueur, admin
-  (CRUD événements, import CSV, matching/fusion joueurs, barème).
-- **Phase 2** : decklists top 8, stats avancées, statut de qualification temps réel.
-- **Phase 3** : notifications e-mail, badges, page finale de saison.
+Liste d'attente avec promotion et lien de paiement, rappels e-mail J-1,
+connexion Google, decklists top 8 publiées, badges, page de finale.

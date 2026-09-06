@@ -372,8 +372,12 @@ returns trigger language plpgsql security definer set search_path = public as $$
 begin
   new.bandai_member_id := nullif(regexp_replace(coalesce(new.bandai_member_id, ''), '\D', '', 'g'), '');
   new.pseudo := nullif(trim(coalesce(new.pseudo, '')), '');
+  -- Le rôle ne change que par un admin, le service role, ou un accès direct
+  -- à la base (éditeur SQL Supabase : pas de JWT, auth.uid() est null).
   if tg_op = 'UPDATE' and new.role is distinct from old.role
-     and auth.role() is distinct from 'service_role' and not public.is_admin() then
+     and auth.uid() is not null
+     and auth.role() is distinct from 'service_role'
+     and not public.is_admin() then
     raise exception 'role_change_forbidden';
   end if;
   return new;
