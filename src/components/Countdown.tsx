@@ -27,9 +27,13 @@ export default function Countdown({
   );
 
   useEffect(() => {
-    setTime(remaining(targetIso));
-    const id = setInterval(() => setTime(remaining(targetIso)), 30_000);
-    return () => clearInterval(id);
+    const tick = () => setTime(remaining(targetIso));
+    const first = setTimeout(tick, 0);
+    const id = setInterval(tick, 30_000);
+    return () => {
+      clearTimeout(first);
+      clearInterval(id);
+    };
   }, [targetIso]);
 
   if (time === "today") {

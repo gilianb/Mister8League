@@ -1,29 +1,31 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import { redirect } from "next/navigation";
 import HatLogo from "@/components/HatLogo";
+import { getSessionUser } from "@/lib/auth/session";
+import { safeNextPath } from "@/lib/auth/paths";
+import LoginForms from "./LoginForms";
 
-export const metadata: Metadata = {
-  title: "Connexion",
-};
+export const metadata: Metadata = { title: "Connexion" };
+export const dynamic = "force-dynamic";
 
-export default function ConnexionPage() {
+type Props = { searchParams: Promise<{ next?: string; mode?: string }> };
+
+export default async function ConnexionPage({ searchParams }: Props) {
+  const sp = await searchParams;
+  const next = safeNextPath(sp.next);
+  const user = await getSessionUser();
+  if (user) redirect(next);
+
   return (
-    <div className="mx-auto max-w-md px-4 py-20 text-center">
-      <HatLogo className="w-16 mx-auto mb-6" />
-      <h1 className="font-display text-3xl font-bold text-cream-100 mb-3">
-        Bientôt disponible
-      </h1>
-      <p className="text-cream-400 mb-8">
-        La création de compte joueur (e-mail ou Google) arrive avec la mise en
-        ligne de la ligue. En attendant, découvrez à quoi ressemblera votre
-        espace joueur.
-      </p>
-      <Link
-        href="/joueur"
-        className="inline-block rounded-lg bg-gold-400 px-5 py-3 font-semibold text-coal-950 hover:bg-gold-300 transition-colors"
-      >
-        Voir l&apos;espace joueur (démo)
-      </Link>
+    <div className="mx-auto max-w-md px-4 py-12 sm:py-16">
+      <div className="text-center mb-8">
+        <HatLogo className="w-14 mx-auto mb-4" />
+        <h1 className="font-display text-3xl font-bold text-cream-100">Espace joueur</h1>
+        <p className="mt-2 text-sm text-cream-400 max-w-[40ch] mx-auto">
+          Inscrivez-vous aux tournois, suivez vos points de ligue et gérez vos decks.
+        </p>
+      </div>
+      <LoginForms initialMode={sp.mode === "inscription" ? "signup" : "signin"} next={next} />
     </div>
   );
 }

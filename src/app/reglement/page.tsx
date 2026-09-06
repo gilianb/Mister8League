@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { getActiveSeason } from "@/lib/data";
-import { DEFAULT_SCALE } from "@/lib/bandai-csv";
+import { getActiveSeason, getPointScale } from "@/lib/db/seasons";
 
 export const metadata: Metadata = {
   title: "Règlement de la ligue",
@@ -8,14 +7,19 @@ export const metadata: Metadata = {
     "Le règlement officiel de la Ligue Mister 8 Tournament (M8T) : barème de points, qualification pour la finale et comptes joueurs.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function ReglementPage() {
   const season = await getActiveSeason();
+  const scale = season ? await getPointScale(season.id) : [];
+  const qualifiedCount = season?.qualified_count ?? 16;
+  const seasonName = season?.name ?? "la saison en cours";
 
   return (
     <div className="bg-paper text-ink py-14 px-4 min-h-full">
       <div className="mx-auto max-w-3xl poster-frame bg-paper-50 px-6 sm:px-12 py-12">
         <p className="text-center text-[10px] tracking-[0.3em] text-poster font-extrabold mb-3">
-          MISTER 8 TCG · SAISON 1 · 2026/2027
+          MISTER 8 TCG · {seasonName.toUpperCase()}
         </p>
         <h1 className="font-poster text-3xl sm:text-4xl text-center leading-tight text-balance">
           Règlement de la Ligue Mister 8 Tournament
@@ -30,7 +34,7 @@ export default async function ReglementPage() {
         <section className="mt-8">
           <h2 className="font-poster text-poster text-xl mb-3">1. La saison</h2>
           <p className="text-sm leading-relaxed text-ink-600">
-            La {season.name}{" "}
+            La {seasonName}{" "}
             regroupe l&apos;ensemble des tournois One Piece
             Card Game officiellement organisés par Mister 8 TCG. Chaque
             tournoi joué rapporte des points de ligue selon votre classement
@@ -62,7 +66,7 @@ export default async function ReglementPage() {
               </tr>
             </thead>
             <tbody>
-              {DEFAULT_SCALE.map((r) => (
+              {scale.map((r) => (
                 <tr key={r.label} className="border-t border-ink/25 odd:bg-paper">
                   <td className="px-4 py-2.5 font-semibold">{r.label}</td>
                   <td className="px-4 py-2.5 text-right font-bold text-poster tabular">
@@ -86,7 +90,7 @@ export default async function ReglementPage() {
           <p className="text-sm leading-relaxed text-ink-600">
             À l&apos;issue du dernier tournoi de la saison, les{" "}
             <strong className="text-ink">
-              {season.qualifiedCount} premiers joueurs
+              {qualifiedCount} premiers joueurs
             </strong>{" "}
             du classement général se qualifient pour la grande Finale.
           </p>
