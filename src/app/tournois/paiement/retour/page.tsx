@@ -34,7 +34,7 @@ export default async function RetourPaiementPage({ searchParams }: Props) {
       <Wrapper>
         <Alert tone="error" title="Inscription introuvable">
           Si vous avez été débité, écrivez-nous à{" "}
-          <a href={tournamentMailto()} className="underline">
+          <a href={tournamentMailto()} className="text-link">
             {TOURNAMENT_CONTACT_EMAIL}
           </a>
           .
@@ -83,13 +83,13 @@ export default async function RetourPaiementPage({ searchParams }: Props) {
   return (
     <Wrapper>
       {processing ? (
-        <Card className="text-center">
+        <Card padding="lg" className="text-center">
           <AutoRefresh seconds={4} />
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold-400 text-coal-950">
+          <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-full bg-gold-400 text-coal-950">
             <Spinner size={20} />
           </div>
-          <h1 className="font-display text-xl font-bold text-cream-100">Paiement en cours de confirmation…</h1>
-          <p className="mt-2 text-sm text-cream-400">
+          <h1 className="font-display text-2xl font-medium tracking-tight text-cream-100">Paiement en cours de confirmation</h1>
+          <p className="mt-2 text-sm leading-relaxed text-cream-400">
             Mollie nous confirme le paiement dans quelques secondes. Cette page se rafraîchit automatiquement.
           </p>
           <div className="mt-6 flex flex-col items-center gap-3">
@@ -100,7 +100,7 @@ export default async function RetourPaiementPage({ searchParams }: Props) {
           </div>
         </Card>
       ) : (
-        <Card className="space-y-4">
+        <Card padding="lg" className="space-y-5">
           <Alert tone="warn" title="Paiement non abouti">
             Statut Mollie : {status}. Votre place a été libérée. Vous pouvez recommencer l&apos;inscription tant qu&apos;il reste
             des places.
@@ -111,9 +111,9 @@ export default async function RetourPaiementPage({ searchParams }: Props) {
               Mes inscriptions
             </Button>
           </div>
-          <p className="text-xs text-cream-600">
+          <p className="text-[13px] text-cream-500">
             Un doute sur un débit ? Écrivez à{" "}
-            <a href={tournamentMailto(reg.event?.title)} className="underline">
+            <a href={tournamentMailto(reg.event?.title)} className="text-link">
               {TOURNAMENT_CONTACT_EMAIL}
             </a>
             .
@@ -125,5 +125,5 @@ export default async function RetourPaiementPage({ searchParams }: Props) {
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <div className="mx-auto max-w-lg px-4 py-16">{children}</div>;
+  return <div className="page-shell max-w-lg py-16 sm:py-24">{children}</div>;
 }

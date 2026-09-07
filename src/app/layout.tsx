@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter, Bevan } from "next/font/google";
+import { Fraunces, Archivo } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { isSupabaseConfigured } from "@/lib/env";
@@ -8,18 +8,14 @@ import "./globals.css";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
+  style: ["normal", "italic"],
+  axes: ["opsz"],
   variable: "--font-fraunces",
 });
 
-const inter = Inter({
+const archivo = Archivo({
   subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const bevan = Bevan({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-bevan",
+  variable: "--font-archivo",
 });
 
 export const metadata: Metadata = {
@@ -38,10 +34,7 @@ export default function RootLayout({
 }>) {
   const configured = isSupabaseConfigured();
   return (
-    <html
-      lang="fr"
-      className={`${fraunces.variable} ${inter.variable} ${bevan.variable} h-full antialiased`}
-    >
+    <html lang="fr" className={`${fraunces.variable} ${archivo.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <Header />
         <main className="flex-1">{configured ? children : <InstallationPage />}</main>

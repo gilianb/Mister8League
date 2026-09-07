@@ -24,8 +24,8 @@ export default function ResultsUploadForm({ eventId, defaultRounds }: { eventId:
   return (
     <Card className="space-y-4">
       <div>
-        <h2 className="font-display text-lg font-bold text-cream-100">Importer le classement Bandai TCG+</h2>
-        <p className="text-xs text-cream-600 mt-1">
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Importer le classement Bandai TCG+</h2>
+        <p className="mt-1 text-[13px] leading-relaxed text-cream-500">
           Dans Bandai TCG+ : tournoi → « Classement final » → export CSV. Colonnes attendues : Classement, Numéro de membre, Nom du joueur, Points gagnés, OMW %, OOMW %.
         </p>
       </div>
@@ -35,7 +35,7 @@ export default function ResultsUploadForm({ eventId, defaultRounds }: { eventId:
         {state.ok && <Alert tone="success">{state.message}</Alert>}
         <div className="grid gap-4 md:grid-cols-[1fr_180px]">
           <Field label="Fichier CSV" htmlFor="csv" required>
-            <input id="csv" name="csv" type="file" accept=".csv,text/csv" required className="block w-full text-sm text-cream-300 file:mr-3 file:rounded-md file:border-0 file:bg-coal-700 file:px-3 file:py-2 file:text-cream-100" />
+            <input id="csv" name="csv" type="file" accept=".csv,text/csv" required className="block w-full text-sm text-cream-300 file:mr-3 file:rounded-control file:border-0 file:bg-coal-700 file:px-3 file:py-2 file:text-[13px] file:font-medium file:text-cream-100" />
           </Field>
           <Field label="Nombre de rondes" htmlFor="rounds" hint="Vide = déduit du meilleur score.">
             <Input id="rounds" name="rounds" type="number" min={1} defaultValue={defaultRounds ?? ""} />

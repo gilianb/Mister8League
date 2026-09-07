@@ -3,6 +3,7 @@ import { getSessionUser } from "@/lib/auth/session";
 import { Alert } from "@/components/ui/Alert";
 import { Button } from "@/components/ui/Button";
 import NewPasswordForm from "./NewPasswordForm";
+import AuthFrame from "../AuthFrame";
 
 export const metadata: Metadata = { title: "Nouveau mot de passe", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -10,9 +11,7 @@ export const dynamic = "force-dynamic";
 export default async function NouveauMotDePassePage() {
   const user = await getSessionUser();
   return (
-    <div className="mx-auto max-w-md px-4 py-16">
-      <h1 className="font-display text-3xl font-bold text-cream-100 mb-2">Choisir un nouveau mot de passe</h1>
-      <p className="text-cream-400 mb-6 text-sm">8 caractères minimum.</p>
+    <AuthFrame title="Un nouveau départ." description="Choisissez votre nouveau mot de passe : 8 caractères minimum pour retrouver votre espace joueur.">
       {user ? (
         <NewPasswordForm />
       ) : (
@@ -25,6 +24,6 @@ export default async function NouveauMotDePassePage() {
           </Button>
         </div>
       )}
-    </div>
+    </AuthFrame>
   );
 }

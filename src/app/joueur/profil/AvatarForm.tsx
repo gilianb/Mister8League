@@ -24,12 +24,12 @@ export default function AvatarForm({ avatarUrl, name }: { avatarUrl: string | nu
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <Card className="flex flex-wrap items-center gap-5">
-      <Avatar src={avatarUrl} name={name} size={72} />
-      <form action={action} className="flex-1 min-w-56 space-y-2">
-        <p className="text-[11px] tracking-[0.16em] font-semibold text-cream-400">PHOTO DE PROFIL</p>
+    <Card padding="lg" className="flex flex-wrap items-center gap-6">
+      <Avatar src={avatarUrl} name={name} size={88} />
+      <form action={action} className="min-w-0 flex-1 space-y-3">
+        <label htmlFor="profile-avatar" className="block font-display text-xl font-medium tracking-tight text-cream-100">Photo de profil</label>
         <div className="flex flex-wrap items-center gap-2">
-          <input ref={fileRef} type="file" name="avatar" accept="image/jpeg,image/png,image/webp" className="text-xs text-cream-400 file:mr-3 file:rounded-md file:border-0 file:bg-coal-700 file:px-3 file:py-1.5 file:text-cream-100 file:text-xs" />
+          <input id="profile-avatar" ref={fileRef} type="file" name="avatar" accept="image/jpeg,image/png,image/webp" className="max-w-full text-[13px] text-cream-400 file:mr-3 file:rounded-control file:border-0 file:bg-coal-700 file:px-3 file:py-2 file:text-[13px] file:font-medium file:text-cream-100" />
           <SubmitButton variant="outline" size="sm" pendingText="Envoi…">
             <IconUpload size={14} /> Envoyer
           </SubmitButton>
@@ -49,9 +49,9 @@ export default function AvatarForm({ avatarUrl, name }: { avatarUrl: string | nu
             </Button>
           )}
         </div>
-        <p className="text-xs text-cream-600">JPG, PNG ou WebP, 2 Mo maximum.</p>
-        {state.error && <p className="text-xs text-red-300">{state.error}</p>}
-        {state.ok && <p className="text-xs text-emerald-300">{state.message}</p>}
+        <p className="text-[13px] text-cream-500">JPG, PNG ou WebP, 2 Mo maximum.</p>
+        {state.error && <p className="text-[13px] text-red-300">{state.error}</p>}
+        {state.ok && <p className="text-[13px] text-emerald-300">{state.message}</p>}
       </form>
     </Card>
   );

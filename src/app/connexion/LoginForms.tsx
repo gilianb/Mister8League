@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useActionState, useState } from "react";
 import { signInAction, signUpAction, type ActionState } from "@/lib/auth/actions";
-import { Card } from "@/components/ui/Card";
 import { Field, Input } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -23,8 +22,8 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
       type="button"
       onClick={() => setMode(m)}
       className={cn(
-        "flex-1 rounded-lg py-2.5 text-sm font-semibold transition-colors",
-        mode === m ? "bg-gold-400 text-coal-950" : "text-cream-400 hover:text-cream-100"
+        "-mb-px flex-1 border-b-2 px-2 pb-3 text-sm font-semibold transition-colors",
+        mode === m ? "border-gold-400 text-cream-100" : "border-transparent text-cream-500 hover:text-cream-100"
       )}
       aria-pressed={mode === m}
     >
@@ -33,14 +32,14 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
   );
 
   return (
-    <Card>
-      <div className="flex gap-1 rounded-xl bg-coal-900 p-1 mb-6">
+    <div>
+      <div className="mb-7 flex gap-5 border-b hairline" role="tablist">
         {tab("signin", "Connexion")}
         {tab("signup", "Créer un compte")}
       </div>
 
       {mode === "signin" ? (
-        <form action={signIn} className="space-y-4">
+        <form action={signIn} className="space-y-5">
           <input type="hidden" name="next" value={next} />
           {signInState.error && (
             <Alert tone="error">
@@ -48,7 +47,7 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
               {signInState.message === "unconfirmed" && (
                 <>
                   {" "}
-                  <Link href="/auth/erreur" className="underline font-semibold">
+                  <Link href="/auth/erreur" className="font-semibold underline underline-offset-4">
                     Renvoyer le lien
                   </Link>
                 </>
@@ -62,7 +61,7 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
             <Input id="signin-password" name="password" type="password" autoComplete="current-password" required />
           </Field>
           <div className="flex items-center justify-between">
-            <Link href="/connexion/mot-de-passe-oublie" className="text-xs text-gold-400 hover:underline">
+            <Link href="/connexion/mot-de-passe-oublie" className="text-link text-[13px]">
               Mot de passe oublié ?
             </Link>
           </div>
@@ -71,10 +70,10 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
           </SubmitButton>
         </form>
       ) : (
-        <form action={signUp} className="space-y-4">
+        <form action={signUp} className="space-y-5">
           <input type="hidden" name="next" value={next} />
           {signUpState.error && <Alert tone="error">{signUpState.error}</Alert>}
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Pseudo" htmlFor="su-pseudo" required error={signUpState.fieldErrors?.pseudo} hint="Affiché dans les classements.">
               <Input id="su-pseudo" name="pseudo" autoComplete="nickname" placeholder="Luffy_92" required invalid={!!signUpState.fieldErrors?.pseudo} />
             </Field>
@@ -100,15 +99,15 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
           <SubmitButton className="w-full" pendingText="Création du compte…">
             Créer mon compte
           </SubmitButton>
-          <p className="text-[11px] text-cream-600 text-center">
+          <p className="text-center text-[13px] leading-relaxed text-cream-500">
             Un e-mail de confirmation vous sera envoyé. En créant un compte, vous acceptez notre{" "}
-            <Link href="/confidentialite" className="underline">
+            <Link href="/confidentialite" className="text-link">
               politique de confidentialité
             </Link>
             .
           </p>
         </form>
       )}
-    </Card>
+    </div>
   );
 }

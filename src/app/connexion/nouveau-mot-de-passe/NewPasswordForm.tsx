@@ -2,7 +2,6 @@
 
 import { useActionState } from "react";
 import { updatePasswordAction, type ActionState } from "@/lib/auth/actions";
-import { Card } from "@/components/ui/Card";
 import { Field, Input } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -10,7 +9,7 @@ import { SubmitButton } from "@/components/ui/SubmitButton";
 export default function NewPasswordForm() {
   const [state, action] = useActionState(updatePasswordAction, {} as ActionState);
   return (
-    <Card>
+    <div>
       <form action={action} className="space-y-4">
         {state.error && <Alert tone="error">{state.error}</Alert>}
         <Field label="Nouveau mot de passe" htmlFor="np-password" required error={state.fieldErrors?.password}>
@@ -23,6 +22,6 @@ export default function NewPasswordForm() {
           Enregistrer le mot de passe
         </SubmitButton>
       </form>
-    </Card>
+    </div>
   );
 }

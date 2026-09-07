@@ -1,45 +1,59 @@
 import Link from "next/link";
 import HatLogo from "./HatLogo";
 
+const LEAGUE_LINKS = [
+  { href: "/calendrier", label: "Calendrier et inscriptions" },
+  { href: "/classement", label: "Classement de la saison" },
+  { href: "/resultats", label: "Résultats des tournois" },
+  { href: "/joueur", label: "Mon espace joueur" },
+  { href: "/reglement", label: "Règlement de la ligue" },
+  { href: "/confidentialite", label: "Politique de confidentialité" },
+];
+
 export default function Footer() {
   return (
-    <footer className="border-t hairline bg-coal-950 mt-16">
-      <div className="mx-auto max-w-6xl px-4 py-10 grid gap-8 sm:grid-cols-3">
+    <footer className="mt-24 border-t hairline bg-coal-950">
+      <div className="page-shell grid gap-10 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:gap-8">
         <div>
-          <div className="flex items-center gap-2 mb-3">
-            <HatLogo className="w-7" />
-            <span className="font-display font-bold text-cream-100">MISTER 8 TCG</span>
+          <div className="flex items-center gap-3">
+            <HatLogo className="w-12" />
+            <div className="leading-none">
+              <p className="font-display text-xl font-semibold text-cream-100">Mister 8</p>
+              <p className="mt-1 text-xs font-medium text-gold-400">Tournament League</p>
+            </div>
           </div>
-          <p className="text-sm text-cream-600 max-w-[30ch]">
-            Organisateur de tournois de jeux de cartes à collectionner à Courbevoie.
+          <p className="mt-5 max-w-[36ch] text-sm leading-relaxed text-cream-500">
+            La ligue One Piece Card Game de la boutique Mister 8 TCG, à Courbevoie. Des tournois toute la saison, une
+            finale pour les meilleurs.
           </p>
         </div>
-        <div className="text-sm">
-          <p className="text-[11px] tracking-[0.2em] text-cream-600 font-semibold mb-3">LA LIGUE</p>
-          <ul className="space-y-2 text-cream-400">
-            <li><Link href="/calendrier" className="hover:text-gold-400">Calendrier et inscriptions</Link></li>
-            <li><Link href="/classement" className="hover:text-gold-400">Classement de la saison</Link></li>
-            <li><Link href="/resultats" className="hover:text-gold-400">Résultats des tournois</Link></li>
-            <li><Link href="/joueur" className="hover:text-gold-400">Mon espace joueur</Link></li>
-            <li><Link href="/reglement" className="hover:text-gold-400">Règlement</Link></li>
-            <li><Link href="/confidentialite" className="hover:text-gold-400">Politique de confidentialité</Link></li>
+        <div>
+          <p className="text-sm font-semibold text-cream-100">La ligue</p>
+          <ul className="mt-4 space-y-2.5 text-sm text-cream-400">
+            {LEAGUE_LINKS.map((l) => (
+              <li key={l.href}>
+                <Link href={l.href} className="transition-colors hover:text-gold-300">
+                  {l.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
-        <div className="text-sm">
-          <p className="text-[11px] tracking-[0.2em] text-cream-600 font-semibold mb-3">NOUS SUIVRE</p>
-          <ul className="space-y-2 text-cream-400">
+        <div>
+          <p className="text-sm font-semibold text-cream-100">Nous suivre</p>
+          <ul className="mt-4 space-y-2.5 text-sm text-cream-400">
             <li>
-              <a href="https://www.instagram.com/mister8tournament" target="_blank" rel="noopener noreferrer" className="hover:text-gold-400">
-                Instagram : @mister8tournament
+              <a href="https://www.instagram.com/mister8tournament" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold-300">
+                Instagram @mister8tournament
               </a>
             </li>
             <li>
-              <a href="https://mister-8.com" target="_blank" rel="noopener noreferrer" className="hover:text-gold-400">
-                Boutique : mister-8.com
+              <a href="https://mister-8.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-gold-300">
+                La boutique mister-8.com
               </a>
             </li>
             <li>
-              <a href="mailto:as@mister-8.com" className="hover:text-gold-400">
+              <a href="mailto:as@mister-8.com" className="transition-colors hover:text-gold-300">
                 Questions tournois : as@mister-8.com
               </a>
             </li>
@@ -47,9 +61,10 @@ export default function Footer() {
         </div>
       </div>
       <div className="border-t hairline">
-        <p className="mx-auto max-w-6xl px-4 py-4 text-xs text-cream-600">
-          © {new Date().getFullYear()} Mister 8 TCG, Courbevoie. One Piece Card Game est une marque de Bandai.
-        </p>
+        <div className="page-shell flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-5 text-xs text-cream-600">
+          <p>© {new Date().getFullYear()} Mister 8 TCG, Courbevoie.</p>
+          <p>One Piece Card Game est une marque de Bandai.</p>
+        </div>
       </div>
     </footer>
   );

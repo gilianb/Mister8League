@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import EventCard, { type MyRegistrationState } from "@/components/EventCard";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Badge } from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionHeading } from "@/components/ui/SectionHeading";
+import { IconChevronRight } from "@/components/ui/icons";
 import { listPastEvents, listUpcomingEvents } from "@/lib/db/events";
 import { getMyRegistrations } from "@/lib/db/registrations";
 import { getSessionUser } from "@/lib/auth/session";
@@ -20,7 +25,6 @@ export const dynamic = "force-dynamic";
 export default async function CalendrierPage() {
   const [upcoming, past, user] = await Promise.all([listUpcomingEvents(), listPastEvents(), getSessionUser()]);
   const nowMs = currentTimeMs();
-
   const mine = new Map<string, MyRegistrationState>();
   if (user) {
     const regs = await getMyRegistrations();
@@ -31,53 +35,89 @@ export default async function CalendrierPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-12">
-      <h1 className="font-display text-3xl sm:text-4xl font-bold text-cream-100 mb-2">Calendrier des tournois</h1>
-      <p className="text-cream-400 mb-10 max-w-[60ch]">
-        Les tournois One Piece comptent pour le classement de la ligue. Inscrivez-vous en ligne : votre place est
-        confirmée dès le paiement et votre billet arrive par e-mail.
-      </p>
+    <div className="page-shell py-12 sm:py-16">
+      <div className="grid items-center gap-10 lg:grid-cols-[1.3fr_1fr] lg:gap-16">
+        <PageHeader
+          className="mb-0"
+          title="Les prochains tournois."
+          lede="Réservez votre place en ligne : elle est confirmée dès le paiement et votre billet arrive par e-mail. Les tournois de ligue comptent pour le classement de la saison."
+        />
+        <figure className="relative hidden aspect-[4/3] overflow-hidden rounded-panel lg:block">
+          <Image src="/ambiance/bg-calendrier.jpg" alt="Les joueurs réunis autour des tables de tournoi Mister 8" fill sizes="(min-width: 1024px) 460px, 100vw" className="object-cover" />
+        </figure>
+      </div>
 
-      <h2 className="text-[11px] tracking-[0.22em] text-gold-400 font-semibold mb-4">À VENIR</h2>
-      {upcoming.length > 0 ? (
-        <div className="grid gap-5 md:grid-cols-2 mb-14">
-          {upcoming.map((e) => (
-            <EventCard key={e.id} event={e} mine={mine.get(e.id) ?? null} nowMs={nowMs} />
-          ))}
+      <section aria-labelledby="upcoming-heading" className="mt-16">
+        <SectionHeading
+          title={<span id="upcoming-heading">À venir</span>}
+          action={<p className="text-sm text-cream-500">{upcoming.length === 0 ? "Aucune date annoncée" : `${upcoming.length} tournoi${upcoming.length > 1 ? "s" : ""}`}</p>}
+        />
+        <div className="mt-7">
+          {upcoming.length > 0 ? (
+            <div className="grid gap-6 md:grid-cols-2">
+              {upcoming.map((e) => (
+                <EventCard key={e.id} event={e} mine={mine.get(e.id) ?? null} nowMs={nowMs} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              title="Le prochain tournoi se prépare"
+              text="Les nouvelles dates seront annoncées ici et sur Instagram @mister8tournament. Créez votre compte dès maintenant pour être prêt le jour J."
+              action={
+                user ? undefined : (
+                  <Button href="/connexion?mode=inscription" variant="outline">
+                    Créer mon compte joueur
+                  </Button>
+                )
+              }
+            />
+          )}
         </div>
-      ) : (
-        <div className="mb-14">
-          <EmptyState
-            title="Aucun tournoi programmé pour l'instant"
-            text="Le prochain tournoi sera annoncé ici et sur Instagram @mister8tournament."
-          />
-        </div>
-      )}
+      </section>
 
-      <h2 className="text-[11px] tracking-[0.22em] text-cream-600 font-semibold mb-4">TOURNOIS PASSÉS</h2>
-      {past.length > 0 ? (
-        <ul className="divide-y hairline border-y hairline">
-          {past.map((e) => (
-            <li key={e.id}>
-              <Link
-                href={e.status === "completed" ? `/resultats/${e.slug}` : `/tournois/${e.slug}`}
-                className="flex flex-wrap items-center gap-x-6 gap-y-1 py-4 px-1 hover:bg-coal-800/60 transition-colors"
-              >
-                <span className="text-sm text-cream-600 tabular w-36 shrink-0">{formatDateShort(e.starts_at)}</span>
-                <span className="font-medium text-cream-100 flex-1 min-w-48">{e.title}</span>
-                {e.format_label && <span className="text-xs text-cream-600 border hairline rounded px-2 py-0.5">{e.format_label}</span>}
-                {e.status === "completed" ? (
-                  <span className="text-sm text-gold-400">Résultats →</span>
-                ) : (
-                  <Badge tone="neutral">Résultats à venir</Badge>
-                )}
+      <section aria-labelledby="past-heading" className="mt-20">
+        <SectionHeading
+          title={<span id="past-heading">Tournois passés</span>}
+          action={
+            past.length > 0 ? (
+              <Link href="/resultats" className="text-link text-sm">
+                Tous les résultats
               </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="text-sm text-cream-600">Aucun tournoi passé pour cette saison.</p>
-      )}
+            ) : undefined
+          }
+        />
+        <div className="mt-6">
+          {past.length > 0 ? (
+            <ul className="divide-y divide-hairline border-y hairline">
+              {past.map((e) => (
+                <li key={e.id}>
+                  <Link
+                    href={e.status === "completed" ? `/resultats/${e.slug}` : `/tournois/${e.slug}`}
+                    className="group flex flex-wrap items-center gap-x-8 gap-y-2 py-5 transition-colors hover:bg-coal-800/60 sm:px-3"
+                  >
+                    <time dateTime={e.starts_at} className="tabular w-44 shrink-0 text-sm text-cream-500">
+                      {formatDateShort(e.starts_at)}
+                    </time>
+                    <span className="min-w-48 flex-1 font-display text-xl font-medium tracking-tight text-cream-100 transition-colors group-hover:text-gold-300">
+                      {e.title}
+                    </span>
+                    {e.format_label && <span className="text-xs text-cream-500">{e.format_label}</span>}
+                    {e.status === "completed" ? (
+                      <span className="inline-flex items-center gap-1 text-sm font-medium text-gold-400">
+                        Résultats <IconChevronRight size={16} />
+                      </span>
+                    ) : (
+                      <Badge tone="neutral">Résultats à venir</Badge>
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="border-t hairline pt-6 text-sm text-cream-500">Les tournois terminés resteront ici, avec leurs résultats.</p>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

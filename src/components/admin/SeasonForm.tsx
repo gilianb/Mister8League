@@ -25,7 +25,7 @@ export default function SeasonForm({ season }: { season: SeasonRow | null }) {
     <Card>
       <form action={action} className="space-y-4">
         {season && <input type="hidden" name="id" value={season.id} />}
-        <h2 className="font-display text-lg font-bold text-cream-100">{season ? "Modifier la saison" : "Nouvelle saison"}</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">{season ? "Modifier la saison" : "Nouvelle saison"}</h2>
         {state.error && <Alert tone="error">{state.error}</Alert>}
         {state.ok && <Alert tone="success">{state.message}</Alert>}
         <div className="grid gap-4 md:grid-cols-2">

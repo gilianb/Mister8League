@@ -68,32 +68,32 @@ export default function CallbackClient({ nextPath }: { nextPath: string }) {
   }, [router, nextPath]);
 
   return (
-    <div className="mx-auto max-w-md px-4 py-20">
-      <Card className="text-center">
+    <div className="page-shell max-w-md py-20 sm:py-28">
+      <Card padding="lg" className="text-center">
         {status === "loading" && (
           <>
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gold-400 text-coal-950">
+            <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-full bg-gold-400 text-coal-950">
               <Spinner size={20} />
             </div>
-            <h1 className="font-display text-xl font-bold text-cream-100">Vérification en cours…</h1>
+            <h1 className="font-display text-2xl font-medium tracking-tight text-cream-100">Vérification en cours…</h1>
             <p className="mt-2 text-sm text-cream-400">Un instant, nous finalisons votre connexion.</p>
           </>
         )}
         {status === "success" && (
           <>
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-white">
+            <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-full bg-emerald-500 text-white">
               <IconCheck />
             </div>
-            <h1 className="font-display text-xl font-bold text-cream-100">C&apos;est bon !</h1>
+            <h1 className="font-display text-2xl font-medium tracking-tight text-cream-100">C&apos;est bon !</h1>
             <p className="mt-2 text-sm text-cream-400">Redirection…</p>
           </>
         )}
         {status === "error" && (
           <>
-            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-brand text-white">
+            <div className="mx-auto mb-5 flex size-12 items-center justify-center rounded-full bg-brand text-white">
               <IconX />
             </div>
-            <h1 className="font-display text-xl font-bold text-cream-100">Lien invalide ou expiré</h1>
+            <h1 className="font-display text-2xl font-medium tracking-tight text-cream-100">Lien invalide ou expiré</h1>
             <p className="mt-2 text-sm text-cream-400">{message}</p>
             <div className="mt-5 flex justify-center gap-2">
               <Button href="/connexion" variant="outline" size="sm">

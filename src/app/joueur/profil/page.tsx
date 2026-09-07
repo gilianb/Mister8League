@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getSessionWithProfile } from "@/lib/auth/session";
 import { safeNextPath } from "@/lib/auth/paths";
 import { Alert } from "@/components/ui/Alert";
+import { PageHeader } from "@/components/ui/PageHeader";
 import ProfileForm from "./ProfileForm";
 import AvatarForm from "./AvatarForm";
 
@@ -17,13 +18,13 @@ export default async function ProfilPage({ searchParams }: Props) {
   const next = sp.next ? safeNextPath(sp.next, "") : "";
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-cream-100">Mon profil</h1>
-        <p className="text-sm text-cream-400 mt-1">
-          Votre pseudo est public. Votre e-mail, votre téléphone et votre numéro Bandai ne le sont jamais.
-        </p>
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        size="md"
+        className="mb-0"
+        title="Mon profil"
+        lede="Votre pseudo est public. Votre e-mail, votre téléphone et votre numéro Bandai ne le sont jamais."
+      />
       {sp.raison === "inscription" && (
         <Alert tone="info" title="Une dernière étape avant l'inscription">
           Complétez pseudo, nom complet et numéro de membre Bandai : ils sont nécessaires pour votre billet et pour

@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/Button";
 import { PointsBars, QualificationBar, StatTiles } from "@/components/PlayerStats";
 import { DeckStatsList, HistoryList } from "@/components/PlayerHistory";
 import DeckCard from "@/components/DeckCard";
-import { formatDateShort } from "@/lib/format";
+import { formatDateShort, placementLabel } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
@@ -48,43 +48,45 @@ export default async function JoueurPublicPage({ params }: Props) {
   const isMe = viewer?.id === profile.id;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10 space-y-6">
-      <div className="flex flex-wrap items-center gap-4">
-        <Avatar src={profile.avatar_url} name={profile.pseudo} size={72} />
+    <div className="page-shell max-w-5xl py-12 sm:py-16">
+      <header className="flex flex-wrap items-center gap-6 border-b hairline pb-8">
+        <Avatar src={profile.avatar_url} name={profile.pseudo} size={88} />
         <div className="min-w-0 flex-1">
-          <p className="text-[11px] tracking-[0.24em] text-gold-400 font-semibold">PROFIL JOUEUR</p>
-          <h1 className="font-display text-3xl font-bold text-cream-100 truncate">{profile.pseudo}</h1>
-          <p className="text-xs text-cream-600">
-            Membre depuis {formatDateShort(profile.created_at)}
-            {season && standing ? ` · ${standing.rank}e de la ${season.name}` : ""}
+          <p className="kicker">
+            Profil joueur
+            {season && standing ? `, ${placementLabel(standing.rank)} de la ${season.name}` : ""}
           </p>
-          {profile.bio && <p className="mt-2 text-sm text-cream-300 max-w-[60ch]">{profile.bio}</p>}
+          <h1 className="mt-2 truncate font-display text-4xl font-semibold tracking-[-0.025em] text-cream-100 sm:text-5xl">{profile.pseudo}</h1>
+          <p className="mt-2 text-sm text-cream-500">Membre depuis le {formatDateShort(profile.created_at)}</p>
+          {profile.bio && <p className="mt-3 max-w-[60ch] text-[15px] leading-relaxed text-cream-300">{profile.bio}</p>}
         </div>
         {isMe && (
           <Button href="/joueur/profil" variant="outline" size="sm">
             Modifier mon profil
           </Button>
         )}
+      </header>
+
+      <div className="mt-8 space-y-10">
+        {season && <QualificationBar standing={standing} qualifiedCount={season.qualified_count} cutPoints={cutPoints(standings, season.qualified_count)} />}
+        <StatTiles standing={standing} />
+        <PointsBars history={seasonHistory} />
+        <HistoryList history={history} />
+        <DeckStatsList stats={deckStats} />
+
+        <section>
+          <h2 className="font-display text-2xl font-medium tracking-[-0.015em] text-cream-100">Decks publics</h2>
+          {decks.length === 0 ? (
+            <p className="mt-4 border-t hairline pt-5 text-sm text-cream-400">Aucun deck public.</p>
+          ) : (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+              {decks.map((d) => (
+                <DeckCard key={d.id} deck={d} />
+              ))}
+            </div>
+          )}
+        </section>
       </div>
-
-      {season && <QualificationBar standing={standing} qualifiedCount={season.qualified_count} cutPoints={cutPoints(standings, season.qualified_count)} />}
-      <StatTiles standing={standing} />
-      <PointsBars history={seasonHistory} />
-      <HistoryList history={history} />
-      <DeckStatsList stats={deckStats} />
-
-      <section className="rounded-2xl border hairline bg-coal-800 p-5 sm:p-6">
-        <h2 className="text-[11px] tracking-[0.2em] text-cream-600 font-semibold mb-3">DECKS</h2>
-        {decks.length === 0 ? (
-          <p className="text-sm text-cream-400">Aucun deck public.</p>
-        ) : (
-          <div className="grid gap-3 sm:grid-cols-2">
-            {decks.map((d) => (
-              <DeckCard key={d.id} deck={d} />
-            ))}
-          </div>
-        )}
-      </section>
     </div>
   );
 }

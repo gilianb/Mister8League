@@ -10,10 +10,12 @@ import { registrationStatusLabel } from "@/lib/tournaments/status";
 import { formatDateLong, formatTime } from "@/lib/format";
 import { formatEuros } from "@/lib/money";
 import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { Alert } from "@/components/ui/Alert";
-import { IconDownload } from "@/components/ui/icons";
+import { Ticket, TicketBody, TicketStub } from "@/components/ui/Ticket";
+import { PaperPill } from "@/components/EventCard";
+import { IconChevronLeft, IconDownload } from "@/components/ui/icons";
 import PayNowButton from "@/components/PayNowButton";
+import HatLogo from "@/components/HatLogo";
 import { TOURNAMENT_CONTACT_EMAIL, tournamentMailto } from "@/lib/email/senders";
 import DeckDeclarationForm from "./DeckDeclarationForm";
 import { currentTimeMs } from "@/lib/clock";
@@ -36,95 +38,99 @@ export default async function InscriptionConfirmationPage({ params, searchParams
   const started = new Date(event.starts_at).getTime() <= currentTimeMs();
 
   const [decks, leaders] = paid && !started ? await Promise.all([listMyDecks(), listLeaders()]) : [[], []];
+  const paymentLabel =
+    reg.payment_provider === "mollie" ? "En ligne, via Mollie" : reg.payment_provider === "cash" ? "En boutique" : reg.payment_provider === "free" ? "Gratuit" : "—";
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-10">
-      <Link href="/joueur/inscriptions" className="text-sm text-cream-600 hover:text-gold-400">
-        ← Mes inscriptions
+    <div className="page-shell max-w-3xl py-10 sm:py-14">
+      <Link href="/joueur/inscriptions" className="inline-flex items-center gap-1 text-sm text-cream-500 transition-colors hover:text-gold-300">
+        <IconChevronLeft size={16} /> Mes inscriptions
       </Link>
 
       {msg === "deck" && (
-        <Alert tone="success" className="mt-4">
+        <Alert tone="success" className="mt-5">
           Deck déclaré mis à jour.
         </Alert>
       )}
 
-      <section className="mt-6 bg-paper text-ink poster-frame p-6 sm:p-10">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <p className="text-[10px] tracking-[0.28em] text-poster font-extrabold">
-            {paid ? "BILLET DE TOURNOI" : "INSCRIPTION"} · {registrationCode(reg.id)}
-          </p>
-          <Badge tone={paid ? "good" : pending ? "warn" : "neutral"}>{registrationStatusLabel(reg.status)}</Badge>
-        </div>
-        <h1 className="font-poster text-3xl sm:text-4xl mt-4 leading-tight">{event.title}</h1>
-        <p className="text-gold-600 tracking-[0.5em] my-5" aria-hidden="true">
-          ✦ ✦ ✦
-        </p>
-        <dl className="grid sm:grid-cols-2 gap-x-8 gap-y-3 text-sm">
-          <div>
-            <dt className="text-ink-400 text-[10px] tracking-[0.2em] font-bold">DATE</dt>
-            <dd className="font-semibold">
-              {formatDateLong(event.starts_at)} · {formatTime(event.starts_at)}
-            </dd>
-          </div>
-          <div>
-            <dt className="text-ink-400 text-[10px] tracking-[0.2em] font-bold">LIEU</dt>
-            <dd className="font-semibold">{[event.venue_name, event.venue_address ?? event.city].filter(Boolean).join(" — ")}</dd>
-          </div>
-          <div>
-            <dt className="text-ink-400 text-[10px] tracking-[0.2em] font-bold">PARTICIPANT</dt>
-            <dd className="font-semibold">
-              {reg.participant_name}
-              <span className="block text-ink-600 font-normal">{reg.participant_email}</span>
-            </dd>
-          </div>
-          <div>
-            <dt className="text-ink-400 text-[10px] tracking-[0.2em] font-bold">PAIEMENT</dt>
-            <dd className="font-semibold">
-              {formatEuros(reg.amount_cents ?? 0, reg.currency ?? "EUR")}
-              <span className="block text-ink-600 font-normal">
-                {reg.payment_provider === "mollie" ? "En ligne (Mollie)" : reg.payment_provider === "cash" ? "En boutique" : reg.payment_provider === "free" ? "Gratuit" : "—"}
-              </span>
-            </dd>
-          </div>
-          {reg.leader && (
-            <div>
-              <dt className="text-ink-400 text-[10px] tracking-[0.2em] font-bold">LEADER DÉCLARÉ</dt>
-              <dd className="font-semibold">{reg.leader.name}</dd>
+      <Ticket as="section" className="mt-6">
+        <TicketBody className="p-7 sm:p-9">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <HatLogo className="w-10" />
+              <p className="kicker text-poster">{paid ? "Billet de tournoi" : "Inscription"}</p>
             </div>
-          )}
-        </dl>
+            <p className="tabular text-sm font-semibold text-ink-600">{registrationCode(reg.id)}</p>
+          </div>
+          <h1 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-[-0.02em] text-ink sm:text-4xl">{event.title}</h1>
 
-        <div className="mt-8 flex flex-wrap items-center gap-3">
-          {paid && (
-            <Button href={`/api/billets/${reg.id}/pdf`} variant="paper" size="lg" external>
-              <IconDownload size={18} /> TÉLÉCHARGER MON BILLET
-            </Button>
-          )}
-          {pending && <PayNowButton registrationId={reg.id} size="lg" />}
-          <Link href={`/tournois/${event.slug}`} className="text-sm font-semibold text-poster underline underline-offset-4">
-            Page du tournoi
-          </Link>
-        </div>
-        {paid && (
-          <p className="mt-4 text-xs text-ink-600">
-            Le billet a aussi été envoyé par e-mail. Présentez le QR code à l&apos;accueil, arrivez 30 minutes avant le
-            début pour l&apos;enregistrement Bandai TCG+, et vérifiez que votre decklist est saisie dans l&apos;app.
-          </p>
-        )}
-        {reg.mollie_sales_invoice_pdf_url && (
-          <p className="mt-2 text-xs text-ink-600">
-            <a href={reg.mollie_sales_invoice_pdf_url} target="_blank" rel="noopener noreferrer" className="underline">
-              Télécharger la facture
-            </a>
-          </p>
-        )}
-      </section>
+          <dl className="mt-7 grid gap-x-8 gap-y-5 border-t border-ink/12 pt-6 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-[12px] text-ink-400">Date</dt>
+              <dd className="mt-1 font-medium text-ink">
+                {formatDateLong(event.starts_at)}
+                <span className="block font-normal text-ink-600">Ouverture des portes à {formatTime(event.starts_at)}</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[12px] text-ink-400">Lieu</dt>
+              <dd className="mt-1 font-medium text-ink">
+                {event.venue_name ?? "Mister 8 TCG"}
+                <span className="block whitespace-pre-line font-normal text-ink-600">{event.venue_address ?? event.city}</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[12px] text-ink-400">Participant</dt>
+              <dd className="mt-1 font-medium text-ink">
+                {reg.participant_name}
+                <span className="block font-normal text-ink-600">{reg.participant_email}</span>
+              </dd>
+            </div>
+            <div>
+              <dt className="text-[12px] text-ink-400">Paiement</dt>
+              <dd className="mt-1 font-medium text-ink">
+                {formatEuros(reg.amount_cents ?? 0, reg.currency ?? "EUR")}
+                <span className="block font-normal text-ink-600">{paymentLabel}</span>
+              </dd>
+            </div>
+            {reg.leader && (
+              <div>
+                <dt className="text-[12px] text-ink-400">Leader déclaré</dt>
+                <dd className="mt-1 font-medium text-ink">{reg.leader.name}</dd>
+              </div>
+            )}
+          </dl>
+        </TicketBody>
+
+        <TicketStub className="flex flex-wrap items-center justify-between gap-4 px-7 py-6 sm:px-9">
+          <PaperPill tone={paid ? "good" : pending ? "warn" : "neutral"}>{registrationStatusLabel(reg.status)}</PaperPill>
+          <div className="flex flex-wrap items-center gap-3">
+            {paid && (
+              <Button href={`/api/billets/${reg.id}/pdf`} variant="paper" size="lg" external>
+                <IconDownload size={18} /> Télécharger mon billet
+              </Button>
+            )}
+            {pending && <PayNowButton registrationId={reg.id} size="lg" />}
+            {reg.mollie_sales_invoice_pdf_url && (
+              <a href={reg.mollie_sales_invoice_pdf_url} target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-poster underline underline-offset-4">
+                Facture
+              </a>
+            )}
+          </div>
+        </TicketStub>
+      </Ticket>
+
+      {paid && (
+        <p className="mt-5 text-sm leading-relaxed text-cream-400">
+          Le billet a aussi été envoyé par e-mail. Présentez le QR code à l&apos;accueil, arrivez 30 minutes avant le début pour
+          l&apos;enregistrement Bandai TCG+ et vérifiez que votre decklist est saisie dans l&apos;application.
+        </p>
+      )}
 
       {paid && !started && (
-        <section className="mt-6 rounded-2xl border hairline bg-coal-800 p-5 sm:p-6">
-          <h2 className="font-display text-lg font-bold text-cream-100">Deck déclaré</h2>
-          <p className="text-xs text-cream-600 mt-1 mb-4">
+        <section className="surface-panel mt-8 p-6 sm:p-7">
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Deck déclaré</h2>
+          <p className="mt-1 mb-5 text-[13px] leading-relaxed text-cream-500">
             Modifiable jusqu&apos;au début du tournoi. Il sert à préremplir le leader dans les résultats.
           </p>
           <DeckDeclarationForm
@@ -137,14 +143,18 @@ export default async function InscriptionConfirmationPage({ params, searchParams
         </section>
       )}
 
-      <p className="mt-6 text-xs text-cream-600">
+      <p className="mt-8 text-[13px] leading-relaxed text-cream-500">
         Une question sur cette inscription ? Écrivez à{" "}
-        <a href={tournamentMailto(event.title)} className="text-gold-400 underline">
+        <a href={tournamentMailto(event.title)} className="text-link">
           {TOURNAMENT_CONTACT_EMAIL}
-        </a>{" "}
-        (tournois uniquement). Conditions de remboursement : voir le{" "}
-        <Link href="/reglement" className="underline">
+        </a>
+        . Les conditions de remboursement sont dans le{" "}
+        <Link href="/reglement" className="text-link">
           règlement
+        </Link>
+        . Vous pouvez aussi revenir à la{" "}
+        <Link href={`/tournois/${event.slug}`} className="text-link">
+          page du tournoi
         </Link>
         .
       </p>

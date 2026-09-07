@@ -20,7 +20,7 @@ export function Avatar({
         alt=""
         width={size}
         height={size}
-        className={cn("rounded-full object-cover shrink-0 border border-black/30 bg-coal-700", className)}
+        className={cn("shrink-0 rounded-full border border-black/30 bg-coal-700 object-cover", className)}
         style={{ width: size, height: size }}
       />
     );
@@ -28,10 +28,10 @@ export function Avatar({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center justify-center rounded-full bg-gold-400 font-display font-bold text-coal-950 leading-none",
+        "inline-flex shrink-0 items-center justify-center rounded-full bg-gold-400 font-display font-semibold leading-none text-coal-950",
         className
       )}
-      style={{ width: size, height: size, fontSize: Math.round(size * 0.42) }}
+      style={{ width: size, height: size, fontSize: Math.round(size * 0.44) }}
       aria-hidden="true"
     >
       {initial}

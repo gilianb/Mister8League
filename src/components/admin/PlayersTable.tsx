@@ -60,7 +60,7 @@ export default function PlayersTable({ rows }: { rows: AdminPlayerRow[] }) {
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
         <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Rechercher un nom, pseudo, ID Bandai…" className="max-w-md" />
-        <div className="flex gap-1 rounded-full bg-coal-900 p-1">
+        <div className="flex gap-1 rounded-full border hairline bg-coal-950 p-1">
           {(
             [
               ["all", "Tous"],
@@ -68,29 +68,29 @@ export default function PlayersTable({ rows }: { rows: AdminPlayerRow[] }) {
               ["no_account", "Sans compte"],
             ] as const
           ).map(([key, label]) => (
-            <button key={key} type="button" onClick={() => setFilter(key)} className={cn("rounded-full px-3 py-1 text-xs font-semibold", filter === key ? "bg-gold-400 text-coal-950" : "text-cream-400 hover:text-cream-100")}>
+            <button key={key} type="button" onClick={() => setFilter(key)} className={cn("rounded-full px-3 py-1.5 text-xs font-semibold transition-colors", filter === key ? "bg-gold-400 text-coal-950" : "text-cream-400 hover:text-cream-100")}>
               {label}
             </button>
           ))}
         </div>
-        <span className="text-xs text-cream-600 ml-auto">{filtered.length} joueur(s)</span>
+        <span className="ml-auto text-[13px] text-cream-500">{filtered.length} joueur(s)</span>
       </div>
       {feedback && <Alert tone={feedback.tone}>{feedback.text}</Alert>}
 
-      <div className="rounded-2xl border hairline bg-coal-800 overflow-hidden">
+      <div className="surface-panel overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-[10px] tracking-[0.16em] text-cream-600 text-left border-b hairline">
-                <th className="px-3 py-3 font-semibold">JOUEUR</th>
-                <th className="px-3 py-3 font-semibold">ID BANDAI</th>
-                <th className="px-3 py-3 font-semibold">COMPTE</th>
-                <th className="px-3 py-3 font-semibold text-right">TOURNOIS</th>
-                <th className="px-3 py-3 font-semibold text-right">POINTS</th>
-                <th className="px-3 py-3 font-semibold text-right">ACTIONS</th>
+              <tr className="table-head border-b hairline text-left">
+                <th className="px-3 py-3 font-semibold">Joueur</th>
+                <th className="px-3 py-3 font-semibold">ID Bandai</th>
+                <th className="px-3 py-3 font-semibold">Compte</th>
+                <th className="px-3 py-3 font-semibold text-right">Tournois</th>
+                <th className="px-3 py-3 font-semibold text-right">Points</th>
+                <th className="px-3 py-3 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y hairline">
+            <tbody className="divide-y divide-hairline">
               {filtered.map((r) => (
                 <tr key={r.id} className={cn(pending && "opacity-70")}>
                   <td className="px-3 py-2.5">
@@ -102,7 +102,7 @@ export default function PlayersTable({ rows }: { rows: AdminPlayerRow[] }) {
                         <input type="hidden" name="id" value={r.id} />
                         <Input name="display_name" defaultValue={r.display_name} className="w-44 py-1.5 text-xs" />
                         <Input name="bandai_member_id" defaultValue={r.bandai_member_id ?? ""} placeholder="ID Bandai" className="w-36 py-1.5 text-xs font-mono" />
-                        <button type="submit" className="text-xs text-gold-400 hover:underline">
+                        <button type="submit" className="text-xs text-gold-400 underline-offset-4 hover:underline">
                           Enregistrer
                         </button>
                         <button type="button" onClick={() => setEditing(null)} className="text-xs text-cream-500 hover:underline">
@@ -118,7 +118,7 @@ export default function PlayersTable({ rows }: { rows: AdminPlayerRow[] }) {
                     {r.profile_id ? (
                       <span className="text-cream-300">
                         {r.pseudo ? (
-                          <Link href={`/joueurs/${encodeURIComponent(r.pseudo)}`} className="text-gold-400 hover:underline">
+                          <Link href={`/joueurs/${encodeURIComponent(r.pseudo)}`} className="text-gold-400 underline-offset-4 hover:underline">
                             {r.pseudo}
                           </Link>
                         ) : (
@@ -132,7 +132,7 @@ export default function PlayersTable({ rows }: { rows: AdminPlayerRow[] }) {
                     {linking === r.id && (
                       <form className="mt-2 flex gap-2" action={(fd) => run(() => linkPlayerToProfileAction(r.id, String(fd.get("pseudo") ?? "")))}>
                         <Input name="pseudo" placeholder="Pseudo du compte" className="w-40 py-1.5 text-xs" autoFocus />
-                        <button type="submit" className="text-xs text-gold-400 hover:underline">
+                        <button type="submit" className="text-xs text-gold-400 underline-offset-4 hover:underline">
                           Rattacher
                         </button>
                       </form>
@@ -161,7 +161,7 @@ export default function PlayersTable({ rows }: { rows: AdminPlayerRow[] }) {
                         Détacher
                       </button>
                     ) : (
-                      <button type="button" disabled={pending} onClick={() => setLinking(linking === r.id ? null : r.id)} className="text-gold-400 hover:underline">
+                      <button type="button" disabled={pending} onClick={() => setLinking(linking === r.id ? null : r.id)} className="text-gold-400 underline-offset-4 hover:underline">
                         Rattacher à un compte
                       </button>
                     )}

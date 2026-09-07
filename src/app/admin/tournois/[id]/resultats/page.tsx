@@ -68,7 +68,7 @@ export default async function AdminResultatsPage({ params }: Props) {
           </Alert>
           <ImportRowsTable importId={pending.imp.id} rows={pending.rows} noShows={pending.noShows} leaders={toLeaderOptions(leaders)} />
           <details className="text-sm">
-            <summary className="cursor-pointer text-gold-400 hover:underline">Importer un autre fichier</summary>
+            <summary className="cursor-pointer text-gold-400 underline-offset-4 hover:underline">Importer un autre fichier</summary>
             <div className="mt-3">
               <ResultsUploadForm eventId={event.id} defaultRounds={pending.imp.rounds ?? event.rounds} />
             </div>
@@ -80,22 +80,22 @@ export default async function AdminResultatsPage({ params }: Props) {
 
       {published && !pending && (
         <Card>
-          <h2 className="font-display text-lg font-bold text-cream-100 mb-3">Classement publié ({results.length} joueurs)</h2>
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100 mb-3">Classement publié ({results.length} joueurs)</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-[10px] tracking-[0.16em] text-cream-600 text-left border-b hairline">
+                <tr className="table-head border-b hairline text-left">
                   <th className="px-2 py-2 font-semibold">#</th>
-                  <th className="px-2 py-2 font-semibold">JOUEUR</th>
-                  <th className="px-2 py-2 font-semibold">LEADER</th>
-                  <th className="px-2 py-2 font-semibold text-right">BILAN</th>
-                  <th className="px-2 py-2 font-semibold text-right">PTS</th>
+                  <th className="px-2 py-2 font-semibold">Joueur</th>
+                  <th className="px-2 py-2 font-semibold">Leader</th>
+                  <th className="px-2 py-2 font-semibold text-right">Bilan</th>
+                  <th className="px-2 py-2 font-semibold text-right">Points</th>
                 </tr>
               </thead>
-              <tbody className="divide-y hairline">
+              <tbody className="divide-y divide-hairline">
                 {results.map((r) => (
                   <tr key={r.result_id}>
-                    <td className="px-2 py-1.5 font-bold text-cream-100 tabular">{placementLabel(r.placement)}</td>
+                    <td className="px-2 py-1.5 font-semibold text-cream-100 tabular">{placementLabel(r.placement)}</td>
                     <td className="px-2 py-1.5 text-cream-100">
                       {r.display_name}
                       {!r.profile_id && <span className="ml-2 text-[10px] text-cream-600">sans compte</span>}
@@ -105,7 +105,7 @@ export default async function AdminResultatsPage({ params }: Props) {
                       {r.wins ?? 0}-{r.losses ?? 0}
                       {(r.draws ?? 0) > 0 ? `-${r.draws}` : ""}
                     </td>
-                    <td className="px-2 py-1.5 text-right font-bold text-cream-100 tabular">+{r.league_points}</td>
+                    <td className="px-2 py-1.5 text-right font-semibold text-cream-100 tabular">+{r.league_points}</td>
                   </tr>
                 ))}
               </tbody>

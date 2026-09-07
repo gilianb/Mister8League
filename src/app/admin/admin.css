@@ -1,0 +1,28 @@
+/* Tableaux denses de l'administration : lignes aérées, survol discret. */
+
+.admin-workspace table {
+  border-collapse: collapse;
+}
+
+.admin-workspace thead {
+  background: color-mix(in srgb, var(--color-cream-100) 3%, transparent);
+}
+
+.admin-workspace tbody tr {
+  transition: background-color 150ms ease;
+}
+
+.admin-workspace tbody tr:hover {
+  background: color-mix(in srgb, var(--color-cream-100) 3%, transparent);
+}
+
+.admin-workspace table th {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+  white-space: nowrap;
+}
+
+.admin-workspace table td {
+  padding-top: 0.875rem;
+  padding-bottom: 0.875rem;
+}

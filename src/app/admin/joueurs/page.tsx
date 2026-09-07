@@ -44,13 +44,13 @@ export default async function AdminJoueursPage() {
   return (
     <div className="space-y-6">
       <SectionHeading as="h1" size="lg" title="Joueurs" />
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <section className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
         <StatTile value={rows.length} label="Identités ligue" sub="joueurs ayant des résultats ou un compte" />
         <StatTile value={profilesCount ?? 0} label="Comptes créés" />
         <StatTile value={noAccount} label="Sans compte" sub="importés depuis un CSV" accent={noAccount ? "brand" : "gold"} />
         <StatTile value={incompleteCount ?? 0} label="Profils incomplets" sub="pseudo ou ID Bandai manquant" />
       </section>
-      <p className="text-sm text-cream-400 max-w-[70ch]">
+      <p className="max-w-[70ch] text-sm leading-relaxed text-cream-400">
         Une identité « ligue » regroupe les résultats d&apos;un joueur (clé : numéro de membre Bandai). Quand un joueur importé crée son compte avec le même numéro, le
         rattachement est automatique. Sinon, rattachez ou fusionnez ici.
       </p>

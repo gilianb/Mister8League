@@ -7,8 +7,8 @@ import { registrationCode } from "@/lib/tournaments/codes";
 import type { TicketStatus } from "@/lib/tournaments/checkin";
 import { formatDateLong, formatDateTime, formatTime } from "@/lib/format";
 import HatLogo from "@/components/HatLogo";
-import { Badge, type BadgeTone } from "@/components/ui/Badge";
-import { Card } from "@/components/ui/Card";
+import { PaperPill } from "@/components/EventCard";
+import { Ticket, TicketBody, TicketStub } from "@/components/ui/Ticket";
 import CheckInButton from "./CheckInButton";
 import { TOURNAMENT_CONTACT_EMAIL, tournamentMailto } from "@/lib/email/senders";
 import { currentTimeMs } from "@/lib/clock";
@@ -27,9 +27,9 @@ type TicketReg = {
   event: { slug: string; title: string; starts_at: string; venue_name: string | null; venue_address: string | null; city: string } | null;
 };
 
-const LABELS: Record<TicketStatus, { label: string; tone: BadgeTone }> = {
+const LABELS: Record<TicketStatus, { label: string; tone: "good" | "warn" | "bad" | "neutral" }> = {
   valid: { label: "Billet valide", tone: "good" },
-  already_checked_in: { label: "Déjà enregistré", tone: "gold" },
+  already_checked_in: { label: "Déjà enregistré", tone: "warn" },
   not_paid: { label: "Paiement requis", tone: "bad" },
   expired: { label: "Billet expiré", tone: "neutral" },
   invalid: { label: "Billet invalide", tone: "neutral" },
@@ -69,73 +69,77 @@ export default async function BilletPage({ params }: Props) {
   const badge = LABELS[status];
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-10">
-      <Card className="space-y-5">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2">
-            <HatLogo className="w-9" />
-            <div className="leading-none">
-              <p className="font-display font-bold text-cream-100">MISTER 8</p>
-              <p className="text-[9px] tracking-[0.28em] text-gold-400 font-semibold">BILLET DE TOURNOI</p>
+    <div className="page-shell max-w-lg py-10 sm:py-14">
+      <Ticket as="section">
+        <TicketBody>
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <HatLogo className="w-10" />
+              <div className="leading-none">
+                <p className="font-display text-lg font-semibold text-ink">Mister 8</p>
+                <p className="mt-1 text-[11px] font-medium text-poster">Billet de tournoi</p>
+              </div>
             </div>
+            <PaperPill tone={badge.tone}>{badge.label}</PaperPill>
           </div>
-          <Badge tone={badge.tone}>{badge.label}</Badge>
-        </div>
 
-        {reg ? (
-          <>
-            <div className="rounded-xl bg-coal-900 px-4 py-3 flex items-center justify-between text-sm">
-              <span className="text-cream-600">N° d&apos;inscription</span>
-              <span className="font-mono font-bold text-cream-100">{registrationCode(reg.id)}</span>
-            </div>
-            <div>
-              <p className="text-[10px] tracking-[0.2em] text-cream-600 font-semibold">TOURNOI</p>
-              <p className="font-display text-lg font-bold text-cream-100">{reg.event?.title ?? "—"}</p>
-              {reg.event && (
-                <p className="text-sm text-cream-400">
-                  {formatDateLong(reg.event.starts_at)} · {formatTime(reg.event.starts_at)}
-                  <br />
-                  {[reg.event.venue_name, reg.event.venue_address ?? reg.event.city].filter(Boolean).join(" — ")}
-                </p>
+          {reg ? (
+            <dl className="mt-6 space-y-5 border-t border-ink/12 pt-5 text-sm">
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-ink-600">Numéro d&apos;inscription</dt>
+                <dd className="tabular font-semibold text-ink">{registrationCode(reg.id)}</dd>
+              </div>
+              <div>
+                <dt className="text-[12px] text-ink-400">Tournoi</dt>
+                <dd className="mt-1 font-display text-xl font-semibold tracking-tight text-ink">{reg.event?.title ?? "—"}</dd>
+                {reg.event && (
+                  <dd className="mt-1 text-ink-600">
+                    {formatDateLong(reg.event.starts_at)}, {formatTime(reg.event.starts_at)}
+                    <br />
+                    {[reg.event.venue_name, reg.event.venue_address ?? reg.event.city].filter(Boolean).join(", ")}
+                  </dd>
+                )}
+              </div>
+              <div>
+                <dt className="text-[12px] text-ink-400">Participant</dt>
+                <dd className="mt-1 font-semibold text-ink">{reg.participant_name}</dd>
+                {reg.leader && <dd className="text-ink-600">Leader déclaré : {reg.leader.name}</dd>}
+              </div>
+              {reg.checked_in_at && (
+                <div className="rounded-control border-l-4 border-emerald-600 bg-emerald-600/10 px-4 py-3 text-emerald-900">
+                  Présence confirmée le {formatDateTime(reg.checked_in_at)}.
+                </div>
               )}
-            </div>
-            <div>
-              <p className="text-[10px] tracking-[0.2em] text-cream-600 font-semibold">PARTICIPANT</p>
-              <p className="font-semibold text-cream-100">{reg.participant_name}</p>
-              {reg.leader && <p className="text-sm text-cream-400">Leader déclaré : {reg.leader.name}</p>}
-            </div>
-            {reg.checked_in_at && (
-              <p className="rounded-xl bg-emerald-400/10 border border-emerald-400/30 px-4 py-3 text-sm text-emerald-200">
-                Présence confirmée le {formatDateTime(reg.checked_in_at)}.
-              </p>
-            )}
-          </>
-        ) : (
-          <p className="text-sm text-cream-400">
-            {status === "expired" ? "Ce billet a expiré." : "Ce lien ne correspond à aucun billet connu."}
-          </p>
-        )}
+            </dl>
+          ) : (
+            <p className="mt-6 border-t border-ink/12 pt-5 text-sm text-ink-600">
+              {status === "expired" ? "Ce billet a expiré." : "Ce lien ne correspond à aucun billet connu."}
+            </p>
+          )}
+        </TicketBody>
 
-        {isAdmin && reg ? (
-          <div className="border-t hairline pt-5">
-            <p className="text-xs text-cream-600 mb-3">Outil organisateur : confirmer la présence du joueur.</p>
-            <CheckInButton token={token} initialStatus={status} />
-          </div>
-        ) : (
-          <p className="text-xs text-cream-600 border-t hairline pt-4">
-            Vous faites partie de l&apos;organisation ? Connectez-vous avec un compte admin pour valider le check-in. Un
-            problème avec ce billet ? Écrivez à{" "}
-            <a href={tournamentMailto(reg?.event?.title)} className="text-gold-400 underline">
-              {TOURNAMENT_CONTACT_EMAIL}
-            </a>
-            .
-          </p>
-        )}
-      </Card>
+        <TicketStub>
+          {isAdmin && reg ? (
+            <div>
+              <p className="mb-3 text-[13px] text-ink-600">Outil organisateur : confirmer la présence du joueur.</p>
+              <CheckInButton token={token} initialStatus={status} />
+            </div>
+          ) : (
+            <p className="text-[13px] leading-relaxed text-ink-600">
+              Vous faites partie de l&apos;organisation ? Connectez-vous avec un compte admin pour valider le check-in. Un problème
+              avec ce billet ? Écrivez à{" "}
+              <a href={tournamentMailto(reg?.event?.title)} className="font-semibold text-poster underline underline-offset-4">
+                {TOURNAMENT_CONTACT_EMAIL}
+              </a>
+              .
+            </p>
+          )}
+        </TicketStub>
+      </Ticket>
       {reg?.event && (
-        <p className="mt-4 text-center text-xs text-cream-600">
-          <Link href={`/tournois/${reg.event.slug}`} className="hover:text-gold-400">
-            Page du tournoi →
+        <p className="mt-5 text-center text-sm">
+          <Link href={`/tournois/${reg.event.slug}`} className="text-link">
+            Page du tournoi
           </Link>
         </p>
       )}

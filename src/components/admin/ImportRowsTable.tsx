@@ -93,31 +93,31 @@ export default function ImportRowsTable({
 
       {noShows.length > 0 && (
         <Card tone="subtle" padding="sm">
-          <p className="text-[11px] tracking-[0.2em] text-amber-200 font-semibold mb-1">INSCRITS ABSENTS DU CSV ({noShows.length})</p>
+          <p className="mb-1 text-sm font-semibold text-amber-200">Inscrits absents du CSV ({noShows.length})</p>
           <p className="text-xs text-cream-600 mb-2">Non-présents, ou joueurs dont le numéro Bandai du profil ne correspond pas. Liez-les à une ligne « à résoudre » si besoin.</p>
           <p className="text-xs text-cream-300">{noShows.map((n) => `${n.pseudo ?? n.participant_name}${n.bandai_member_id ? ` (${n.bandai_member_id})` : " (sans ID)"}`).join(" · ")}</p>
         </Card>
       )}
 
-      <div className="rounded-2xl border hairline bg-coal-800 overflow-hidden">
+      <div className="surface-panel overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-[10px] tracking-[0.16em] text-cream-600 text-left border-b hairline">
+              <tr className="table-head border-b hairline text-left">
                 <th className="px-3 py-3 font-semibold">#</th>
-                <th className="px-3 py-3 font-semibold">CSV BANDAI</th>
-                <th className="px-3 py-3 font-semibold">BILAN</th>
-                <th className="px-3 py-3 font-semibold">RAPPROCHEMENT</th>
-                <th className="px-3 py-3 font-semibold">LEADER</th>
-                <th className="px-3 py-3 font-semibold text-right">ACTIONS</th>
+                <th className="px-3 py-3 font-semibold">CSV Bandai</th>
+                <th className="px-3 py-3 font-semibold">Bilan</th>
+                <th className="px-3 py-3 font-semibold">Rapprochement</th>
+                <th className="px-3 py-3 font-semibold">Leader</th>
+                <th className="px-3 py-3 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y hairline">
+            <tbody className="divide-y divide-hairline">
               {visible.map((r) => {
                 const res = RES_LABEL[r.resolution] ?? RES_LABEL.unresolved;
                 return (
                   <tr key={r.id} className={cn(r.resolution === "unresolved" && "bg-brand/5", r.resolution === "skip" && "opacity-50")}>
-                    <td className="px-3 py-2 font-bold tabular text-cream-100">{r.placement}</td>
+                    <td className="px-3 py-2 font-semibold tabular text-cream-100">{r.placement}</td>
                     <td className="px-3 py-2">
                       <span className="text-cream-100">{r.player_name}</span>
                       <span className="block font-mono text-xs text-cream-600">{r.bandai_member_id ?? "sans ID"}</span>
@@ -135,7 +135,7 @@ export default function ImportRowsTable({
                         value={r.leader_id ?? ""}
                         disabled={pending || r.resolution === "skip"}
                         onChange={(e) => run(() => setRowLeaderAction(r.id, e.target.value || null))}
-                        className="w-44 rounded-md border border-coal-700 bg-coal-900 px-2 py-1 text-xs text-cream-100"
+                        className="w-44 rounded-control border border-coal-700 bg-coal-950 px-2 py-1.5 text-xs text-cream-100"
                       >
                         <option value="">— Leader inconnu —</option>
                         {leaders.map((l) => (
@@ -198,7 +198,7 @@ function RowActions({
             if (e.target.value) run(() => resolveRowAction(row.id, { kind: "registration", registrationId: e.target.value }), "Ligne liée à l'inscrit.");
             setMode("none");
           }}
-          className="w-full rounded-md border border-coal-700 bg-coal-900 px-2 py-1 text-xs text-cream-100"
+          className="w-full rounded-control border border-coal-700 bg-coal-950 px-2 py-1.5 text-xs text-cream-100"
         >
           <option value="">Choisir un inscrit…</option>
           {noShows.map((n) => (
@@ -220,11 +220,11 @@ function RowActions({
       )}
       <div className="flex flex-wrap justify-end gap-x-2 gap-y-1 text-xs">
         {noShows.length > 0 && (
-          <button type="button" disabled={pending} onClick={() => setMode(mode === "registration" ? "none" : "registration")} className="text-gold-400 hover:underline">
+          <button type="button" disabled={pending} onClick={() => setMode(mode === "registration" ? "none" : "registration")} className="text-gold-400 underline-offset-4 hover:underline">
             Lier à un inscrit
           </button>
         )}
-        <button type="button" disabled={pending} onClick={() => setMode(mode === "player" ? "none" : "player")} className="text-gold-400 hover:underline">
+        <button type="button" disabled={pending} onClick={() => setMode(mode === "player" ? "none" : "player")} className="text-gold-400 underline-offset-4 hover:underline">
           Lier à un joueur
         </button>
         {row.resolution !== "new_player" && (

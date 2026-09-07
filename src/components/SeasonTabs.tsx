@@ -14,10 +14,10 @@ export default function SeasonTabs({
   if (seasons.length <= 1) return null;
   return (
     <Tabs
-      className="mb-6"
+      className="mb-8"
       items={seasons.map((s) => ({
         href: `${basePath}?saison=${encodeURIComponent(s.slug)}`,
-        label: s.name.replace(/^Saison\s+/i, ""),
+        label: s.name,
         active: s.slug === currentSlug,
       }))}
     />

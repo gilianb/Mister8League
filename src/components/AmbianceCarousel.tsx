@@ -12,7 +12,7 @@ function Strip({ hidden = false }: { hidden?: boolean }) {
           src={src}
           alt={hidden ? "" : "Tournoi Mister 8 à Courbevoie"}
           loading="lazy"
-          className="h-52 sm:h-64 w-auto rounded-xl border hairline object-cover"
+          className="h-56 w-auto rounded-panel object-cover sm:h-72"
         />
       ))}
     </div>
@@ -21,14 +21,10 @@ function Strip({ hidden = false }: { hidden?: boolean }) {
 
 export default function AmbianceCarousel() {
   return (
-    <section className="py-10 overflow-hidden">
-      <div className="mx-auto max-w-6xl px-4 mb-5 flex items-baseline justify-between">
-        <h2 className="font-display text-2xl font-bold text-cream-100">
-          L&apos;ambiance de nos tournois
-        </h2>
-        <p className="text-sm text-cream-600 hidden sm:block">
-          Chaque mois à Courbevoie
-        </p>
+    <section className="overflow-hidden py-16 sm:py-20">
+      <div className="page-shell mb-7 flex flex-wrap items-end justify-between gap-3">
+        <h2 className="font-display text-2xl font-medium tracking-[-0.015em] text-cream-100 sm:text-[1.75rem]">Nos tournois, en vrai</h2>
+        <p className="text-sm text-cream-500">Chaque mois à Courbevoie</p>
       </div>
       <div className="marquee group">
         <div className="marquee-track flex w-max group-hover:[animation-play-state:paused]">

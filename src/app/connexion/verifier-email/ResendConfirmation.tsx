@@ -42,7 +42,8 @@ export default function ResendConfirmation({ initialEmail, next }: { initialEmai
 
   return (
     <div className="space-y-3">
-      <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vous@exemple.fr" autoComplete="email" />
+      <label htmlFor="resend-email" className="block text-[13px] font-medium text-cream-300">Votre adresse e-mail</label>
+      <Input id="resend-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="vous@exemple.fr" autoComplete="email" />
       {feedback && <Alert tone={feedback.tone}>{feedback.text}</Alert>}
       <Button variant="outline" className="w-full" onClick={resend} disabled={!email.includes("@") || cooldown > 0} pending={pending}>
         <IconRefresh size={16} />

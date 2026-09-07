@@ -16,12 +16,12 @@ type DeckInput = { id: string; name: string; leader_id: string | null; decklist_
 export default function DeckForm({ leaders, deck }: { leaders: LeaderOption[]; deck: DeckInput | null }) {
   const [state, action] = useActionState(saveDeckAction, {} as ActionState);
   return (
-    <Card>
-      <form action={action} className="space-y-4">
+    <Card padding="lg">
+      <form action={action} className="space-y-5">
         {deck && <input type="hidden" name="id" value={deck.id} />}
-        <h2 className="font-display text-lg font-bold text-cream-100">{deck ? "Modifier le deck" : "Nouveau deck"}</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">{deck ? "Modifier le deck" : "Nouveau deck"}</h2>
         {state.error && <Alert tone="error">{state.error}</Alert>}
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Nom du deck" htmlFor="d-name" required error={state.fieldErrors?.name}>
             <Input id="d-name" name="name" defaultValue={deck?.name ?? ""} placeholder="Zoro rouge aggro" required maxLength={80} />
           </Field>
@@ -34,7 +34,7 @@ export default function DeckForm({ leaders, deck }: { leaders: LeaderOption[]; d
           <Textarea id="d-notes" name="notes" defaultValue={deck?.notes ?? ""} rows={2} />
         </Field>
         <Checkbox name="is_public" defaultChecked={deck?.is_public ?? true} label="Visible sur mon profil public" />
-        <div className="flex justify-end gap-2">
+        <div className="flex justify-end gap-2 border-t hairline pt-5">
           {deck && (
             <Button href="/joueur/decks" variant="ghost">
               Annuler

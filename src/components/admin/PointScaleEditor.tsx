@@ -37,8 +37,8 @@ export default function PointScaleEditor({ seasonId, rules }: { seasonId: string
         <input type="hidden" name="season_id" value={seasonId} />
         <div className="flex items-start justify-between gap-3">
           <div>
-            <h2 className="font-display text-lg font-bold text-cream-100">Barème des points</h2>
-            <p className="text-xs text-cream-600 mt-1">Tranches de placement → points. La tranche la plus étroite l&apos;emporte. Max vide = jusqu&apos;au dernier. Les points des tournois déjà publiés sont recalculés.</p>
+            <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Barème des points</h2>
+            <p className="mt-1 text-[13px] leading-relaxed text-cream-500">Tranches de placement → points. La tranche la plus étroite l&apos;emporte. Max vide = jusqu&apos;au dernier. Les points des tournois déjà publiés sont recalculés.</p>
           </div>
           <Button
             type="button"
@@ -51,11 +51,11 @@ export default function PointScaleEditor({ seasonId, rules }: { seasonId: string
         </div>
         {state.error && <Alert tone="error">{state.error}</Alert>}
         {state.ok && <Alert tone="success">{state.message}</Alert>}
-        <div className="grid grid-cols-[1fr_80px_80px_80px_36px] gap-2 text-[10px] tracking-[0.16em] text-cream-600 font-semibold px-1">
-          <span>LIBELLÉ</span>
-          <span>MIN</span>
-          <span>MAX</span>
-          <span>POINTS</span>
+        <div className="grid grid-cols-[1fr_80px_80px_80px_36px] gap-2 table-head px-1">
+          <span>Libellé</span>
+          <span>Min</span>
+          <span>Max</span>
+          <span>Points</span>
           <span />
         </div>
         {lines.map((l) => (

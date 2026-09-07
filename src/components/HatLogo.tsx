@@ -1,9 +1,17 @@
-export default function HatLogo({ className = "w-8" }: { className?: string }) {
+import Image from "next/image";
+import { cn } from "@/lib/cn";
+
+/** Le chapeau de paille de Mister 8, emblème du site (recadré depuis le logo officiel). */
+export default function HatLogo({ className = "w-8", priority = false }: { className?: string; priority?: boolean }) {
   return (
-    <svg viewBox="0 0 120 76" className={className} aria-hidden="true">
-      <path d="M24 56 C24 22 96 22 96 56 Z" fill="#F6C36B" />
-      <path d="M26 56 C26 45 94 45 94 56 Z" fill="#E8392B" />
-      <ellipse cx="60" cy="57" rx="56" ry="15" fill="#F6C36B" />
-    </svg>
+    <Image
+      src="/brand/chapeau-emblem.png"
+      alt=""
+      width={480}
+      height={252}
+      priority={priority}
+      className={cn("h-auto shrink-0 select-none", className)}
+      aria-hidden="true"
+    />
   );
 }

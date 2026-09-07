@@ -38,22 +38,22 @@ export default async function AdminTournoisPage({ searchParams }: Props) {
       {events.length === 0 ? (
         <EmptyState title="Aucun tournoi" text="Créez votre premier tournoi : il reste en brouillon jusqu'à publication." action={<Button href="/admin/tournois/nouveau">Créer un tournoi</Button>} />
       ) : (
-        <div className="rounded-2xl border hairline bg-coal-800 overflow-hidden">
+        <div className="surface-panel overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-[10px] tracking-[0.16em] text-cream-600 text-left border-b hairline">
-                  <th className="px-4 py-3 font-semibold">TOURNOI</th>
-                  <th className="px-4 py-3 font-semibold">DATE</th>
-                  <th className="px-4 py-3 font-semibold">STATUT</th>
-                  <th className="px-4 py-3 font-semibold text-right">INSCRITS</th>
-                  <th className="px-4 py-3 font-semibold text-right">TARIF</th>
-                  <th className="px-4 py-3 font-semibold text-right">ACTIONS</th>
+                <tr className="table-head border-b hairline text-left">
+                  <th className="px-4 py-3 font-semibold">Tournoi</th>
+                  <th className="px-4 py-3 font-semibold">Date</th>
+                  <th className="px-4 py-3 font-semibold">Statut</th>
+                  <th className="px-4 py-3 font-semibold text-right">Inscrits</th>
+                  <th className="px-4 py-3 font-semibold text-right">Tarif</th>
+                  <th className="px-4 py-3 font-semibold text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y hairline">
+              <tbody className="divide-y divide-hairline">
                 {events.map((e) => (
-                  <tr key={e.id} className="hover:bg-coal-700/30">
+                  <tr key={e.id} className="hover:bg-cream-100/4">
                     <td className="px-4 py-3">
                       <Link href={`/admin/tournois/${e.id}`} className="font-medium text-cream-100 hover:text-gold-400">
                         {e.title}
@@ -75,13 +75,13 @@ export default async function AdminTournoisPage({ searchParams }: Props) {
                     </td>
                     <td className="px-4 py-3 text-right tabular text-cream-300">{formatEuros(e.price_cents)}</td>
                     <td className="px-4 py-3 text-right whitespace-nowrap">
-                      <Link href={`/admin/tournois/${e.id}/participants`} className="text-xs text-gold-400 hover:underline mr-3">
+                      <Link href={`/admin/tournois/${e.id}/participants`} className="text-xs text-gold-400 underline-offset-4 hover:underline mr-3">
                         Participants
                       </Link>
-                      <Link href={`/admin/tournois/${e.id}/resultats`} className="text-xs text-gold-400 hover:underline mr-3">
+                      <Link href={`/admin/tournois/${e.id}/resultats`} className="text-xs text-gold-400 underline-offset-4 hover:underline mr-3">
                         Résultats
                       </Link>
-                      <Link href={`/admin/tournois/${e.id}`} className="text-xs text-cream-300 hover:underline">
+                      <Link href={`/admin/tournois/${e.id}`} className="text-xs text-cream-300 underline-offset-4 hover:underline">
                         Modifier
                       </Link>
                     </td>

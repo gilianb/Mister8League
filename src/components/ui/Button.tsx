@@ -7,19 +7,21 @@ export type ButtonVariant = "gold" | "brand" | "ghost" | "outline" | "danger" | 
 export type ButtonSize = "sm" | "md" | "lg";
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  gold: "bg-gold-400 text-coal-950 hover:bg-gold-300 shadow-[0_1px_0_rgba(0,0,0,.25)]",
-  brand: "bg-brand text-white hover:brightness-110",
-  ghost: "text-cream-200 hover:bg-coal-700/60",
-  outline: "border border-gold-400/60 text-gold-400 hover:bg-gold-400 hover:text-coal-950",
+  /* Paille : action principale sur fond sombre */
+  gold: "bg-gold-400 text-coal-950 hover:bg-gold-300 active:bg-gold-500",
+  /* Ruban : engagement (payer, s'inscrire, confirmer) */
+  brand: "bg-brand text-white hover:bg-brand-600 active:bg-brand-600",
+  outline: "border border-cream-100/25 text-cream-100 hover:border-gold-400 hover:text-gold-300",
+  ghost: "text-cream-300 hover:bg-cream-100/6 hover:text-cream-100",
   danger: "border border-brand/50 text-brand hover:bg-brand hover:text-white",
-  paper:
-    "bg-ink text-gold-400 font-poster tracking-wider shadow-[4px_4px_0_#c9331f] hover:translate-x-0.5 hover:translate-y-0.5 hover:shadow-[2px_2px_0_#c9331f]",
+  /* Encre sur papier : boutons des billets et pages claires */
+  paper: "bg-ink text-paper-50 hover:bg-coal-700",
 };
 
 const SIZES: Record<ButtonSize, string> = {
-  sm: "px-3 py-1.5 text-xs",
-  md: "px-4 py-2.5 text-sm",
-  lg: "px-5 py-3 text-base",
+  sm: "h-9 px-3.5 text-[13px]",
+  md: "h-11 px-5 text-sm",
+  lg: "h-13 px-6 text-base",
 };
 
 type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type"> & {
@@ -45,7 +47,7 @@ export function Button({
   ...rest
 }: Props) {
   const classes = cn(
-    "inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-x-0 disabled:hover:translate-y-0 whitespace-nowrap",
+    "inline-flex items-center justify-center gap-2 rounded-control font-semibold whitespace-nowrap select-none transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-50",
     VARIANTS[variant],
     SIZES[size],
     className

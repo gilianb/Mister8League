@@ -9,6 +9,7 @@ import { eventAvailability, seatsLeft } from "@/lib/tournaments/status";
 import { PageHeader } from "@/components/ui/PageHeader";
 import RegisterForm from "./RegisterForm";
 import { currentTimeMs } from "@/lib/clock";
+import { formatDateLong, formatTime } from "@/lib/format";
 
 export const metadata: Metadata = { title: "Inscription au tournoi", robots: { index: false } };
 export const dynamic = "force-dynamic";
@@ -37,11 +38,12 @@ export default async function InscriptionPage({ params }: Props) {
   const [decks, leaders] = await Promise.all([listMyDecks(), listLeaders()]);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-10">
+    <div className="page-shell py-10 sm:py-14">
       <PageHeader
+        size="md"
         backHref={back}
         backLabel="Retour au tournoi"
-        eyebrow="Inscription"
+        eyebrow={`Inscription, ${formatDateLong(event.starts_at)} à ${formatTime(event.starts_at)}`}
         title={event.title}
         lede="Votre place est réservée pendant 15 minutes, le temps de régler en ligne. Le billet PDF arrive ensuite par e-mail."
       />
@@ -53,6 +55,8 @@ export default async function InscriptionPage({ params }: Props) {
           price_cents: event.price_cents,
           fee_bps: event.fee_bps,
           currency: event.currency,
+          starts_at: event.starts_at,
+          venue: `${event.venue_name ?? "Mister 8 TCG"}, ${event.city}`,
         }}
         profile={{
           fullName: profile!.full_name ?? "",

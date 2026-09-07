@@ -8,15 +8,16 @@ type Props = HTMLAttributes<HTMLDivElement> & {
 
 const PADDING = { none: "", sm: "p-4", md: "p-5 sm:p-6", lg: "p-6 sm:p-8" };
 
+/** Panneau : `club` (sombre), `paper` (papier, pour les billets et documents), `subtle` (filet seul). */
 export function Card({ tone = "club", padding = "md", className, children, ...rest }: Props) {
   return (
     <div
       className={cn(
         tone === "paper"
-          ? "bg-paper-50 text-ink poster-frame"
+          ? "rounded-panel border border-ink/12 bg-paper-50 text-ink"
           : tone === "subtle"
-            ? "rounded-xl border hairline bg-coal-900/60"
-            : "rounded-2xl border hairline bg-coal-800",
+            ? "rounded-panel border hairline"
+            : "surface-panel",
         PADDING[padding],
         className
       )}

@@ -139,7 +139,7 @@ export default function EventForm({
       )}
 
       <Card className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-cream-100">Informations</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Informations</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Titre" htmlFor="f-title" required error={fe.title}>
             <Input id="f-title" name="title" value={v.title} onChange={set("title")} placeholder="Tournoi One Piece OP16 · Septembre" required />
@@ -191,7 +191,7 @@ export default function EventForm({
       </Card>
 
       <Card className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-cream-100">Dates (heure de Paris)</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Dates (heure de Paris)</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Début" htmlFor="f-start" required error={fe.starts_at}>
             <Input id="f-start" name="starts_at" type="datetime-local" value={v.starts_at} onChange={set("starts_at")} required />
@@ -209,7 +209,7 @@ export default function EventForm({
       </Card>
 
       <Card className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-cream-100">Lieu</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Lieu</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Nom du lieu" htmlFor="f-venue">
             <Input id="f-venue" name="venue_name" value={v.venue_name} onChange={set("venue_name")} />
@@ -227,7 +227,7 @@ export default function EventForm({
       </Card>
 
       <Card className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-cream-100">Places et tarif</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Places et tarif</h2>
         <div className="grid gap-4 md:grid-cols-4">
           <Field label="Capacité" htmlFor="f-cap" required error={fe.capacity} hint="0 = illimitée">
             <Input id="f-cap" name="capacity" type="number" min={0} value={v.capacity} onChange={set("capacity")} required />
@@ -248,7 +248,7 @@ export default function EventForm({
       </Card>
 
       <Card className="space-y-4">
-        <h2 className="font-display text-lg font-bold text-cream-100">Contenu de la fiche</h2>
+        <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Contenu de la fiche</h2>
         <Field label="Description" htmlFor="f-desc">
           <Textarea id="f-desc" name="description" value={v.description} onChange={set("description")} rows={4} />
         </Field>
@@ -265,7 +265,7 @@ export default function EventForm({
         </div>
       </Card>
 
-      <div className="sticky bottom-4 z-10 rounded-xl border hairline bg-coal-900/95 backdrop-blur px-4 py-3 flex items-center justify-between gap-3">
+      <div className="sticky bottom-4 z-10 flex items-center justify-between gap-3 rounded-panel border hairline bg-coal-900/95 px-5 py-3.5 backdrop-blur">
         <p className="text-xs text-cream-600">{mode === "create" ? "Créez en brouillon, puis publiez quand la fiche est prête." : "Les modifications sont visibles immédiatement."}</p>
         <SubmitButton pendingText="Enregistrement…">{mode === "create" ? "Créer le tournoi" : "Enregistrer"}</SubmitButton>
       </div>

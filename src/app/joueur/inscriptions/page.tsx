@@ -8,6 +8,8 @@ import { isActiveRegistration, isPaidStatus, registrationStatusLabel } from "@/l
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { PageHeader } from "@/components/ui/PageHeader";
+import { SectionHeading } from "@/components/ui/SectionHeading";
 import { IconTicket } from "@/components/ui/icons";
 import PayNowButton from "@/components/PayNowButton";
 import { currentTimeMs } from "@/lib/clock";
@@ -24,15 +26,19 @@ export default async function InscriptionsPage() {
   const past = regs.filter((r) => !upcoming.includes(r));
 
   const Row = ({ r }: { r: (typeof regs)[number] }) => (
-    <li className="py-4 flex flex-wrap items-center gap-x-5 gap-y-2">
-      <div className="flex-1 min-w-52">
-        <Link href={`/tournois/${r.event.slug}`} className="font-medium text-cream-100 hover:text-gold-400">
+    <li className="flex flex-wrap items-center gap-x-5 gap-y-3 py-4">
+      <div className="min-w-52 flex-1">
+        <Link href={`/tournois/${r.event.slug}`} className="font-display text-xl font-medium tracking-tight text-cream-100 transition-colors hover:text-gold-300">
           {r.event.title}
         </Link>
-        <p className="text-xs text-cream-600">
-          {formatDateShort(r.event.starts_at)} · {formatTime(r.event.starts_at)} · {registrationCode(r.id)}
-          {r.amount_cents ? ` · ${formatEuros(r.amount_cents, r.currency ?? "EUR")}` : ""}
-          {r.leader ? ` · ${r.leader.name}` : ""}
+        <p className="tabular mt-1 text-[13px] text-cream-500">
+          {formatDateShort(r.event.starts_at)}, {formatTime(r.event.starts_at)}
+          <span className="mx-2" aria-hidden="true">
+            ·
+          </span>
+          {registrationCode(r.id)}
+          {r.amount_cents ? `, ${formatEuros(r.amount_cents, r.currency ?? "EUR")}` : ""}
+          {r.leader ? `, leader ${r.leader.name}` : ""}
         </p>
       </div>
       <Badge tone={TONES[r.status] ?? "neutral"}>{registrationStatusLabel(r.status)}</Badge>
@@ -46,29 +52,28 @@ export default async function InscriptionsPage() {
   );
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="font-display text-2xl font-bold text-cream-100">Mes inscriptions</h1>
-        <p className="text-sm text-cream-400 mt-1">Vos billets, paiements en attente et historique d&apos;inscriptions.</p>
-      </div>
+    <div className="space-y-10">
+      <PageHeader size="md" className="mb-0" title="Mes inscriptions" lede="Vos billets, vos paiements en attente et l'historique de vos inscriptions." />
 
       <section>
-        <h2 className="text-[11px] tracking-[0.2em] text-gold-400 font-semibold mb-2">À VENIR</h2>
-        {upcoming.length === 0 ? (
-          <EmptyState compact title="Aucune inscription à venir" action={<Button href="/calendrier">Voir les tournois</Button>} />
-        ) : (
-          <ul className="divide-y hairline border-y hairline">
-            {upcoming.map((r) => (
-              <Row key={r.id} r={r} />
-            ))}
-          </ul>
-        )}
+        <SectionHeading title="À venir" />
+        <div className="mt-4">
+          {upcoming.length === 0 ? (
+            <EmptyState compact title="Aucune inscription à venir" action={<Button href="/calendrier">Voir les tournois</Button>} />
+          ) : (
+            <ul className="divide-y divide-hairline border-y hairline">
+              {upcoming.map((r) => (
+                <Row key={r.id} r={r} />
+              ))}
+            </ul>
+          )}
+        </div>
       </section>
 
       {past.length > 0 && (
         <section>
-          <h2 className="text-[11px] tracking-[0.2em] text-cream-600 font-semibold mb-2">HISTORIQUE</h2>
-          <ul className="divide-y hairline border-y hairline">
+          <SectionHeading title="Historique" />
+          <ul className="mt-4 divide-y divide-hairline border-y hairline">
             {past.map((r) => (
               <Row key={r.id} r={r} />
             ))}

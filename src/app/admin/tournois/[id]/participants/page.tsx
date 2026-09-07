@@ -93,7 +93,7 @@ export default async function ParticipantsPage({ params }: Props) {
         }
       />
 
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-3">
+      <section className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4">
         <StatTile value={event.capacity > 0 ? `${paid} / ${event.capacity}` : paid} label="Inscrits payés" />
         <StatTile value={present} label="Présents (check-in)" />
         <StatTile value={pendingActive} label="Réservations en cours" accent={pendingActive ? "brand" : "gold"} />

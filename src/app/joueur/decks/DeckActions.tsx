@@ -9,7 +9,7 @@ export default function DeckActions({ deckId, deckName }: { deckId: string; deck
   const [pending, start] = useTransition();
   return (
     <span className="flex items-center gap-1">
-      <Link href={`/joueur/decks?edit=${deckId}`} className="p-1.5 rounded-md text-cream-400 hover:text-gold-400 hover:bg-coal-700/60" aria-label={`Modifier ${deckName}`}>
+      <Link href={`/joueur/decks?edit=${deckId}`} className="rounded-control p-1.5 text-cream-400 transition-colors hover:bg-cream-100/6 hover:text-gold-300" aria-label={`Modifier ${deckName}`}>
         <IconEdit size={16} />
       </Link>
       <button
@@ -22,7 +22,7 @@ export default function DeckActions({ deckId, deckName }: { deckId: string; deck
             });
           }
         }}
-        className="p-1.5 rounded-md text-cream-400 hover:text-red-300 hover:bg-coal-700/60 disabled:opacity-50"
+        className="rounded-control p-1.5 text-cream-400 transition-colors hover:bg-cream-100/6 hover:text-red-300 disabled:opacity-50"
         aria-label={`Supprimer ${deckName}`}
       >
         <IconTrash size={16} />

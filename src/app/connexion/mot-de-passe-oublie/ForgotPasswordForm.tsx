@@ -2,7 +2,6 @@
 
 import { useActionState } from "react";
 import { forgotPasswordAction, type ActionState } from "@/lib/auth/actions";
-import { Card } from "@/components/ui/Card";
 import { Field, Input } from "@/components/ui/Field";
 import { Alert } from "@/components/ui/Alert";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -11,7 +10,7 @@ import { Button } from "@/components/ui/Button";
 export default function ForgotPasswordForm() {
   const [state, action] = useActionState(forgotPasswordAction, {} as ActionState);
   return (
-    <Card>
+    <div>
       {state.ok ? (
         <div className="space-y-4">
           <Alert tone="success" title="E-mail envoyé">
@@ -35,6 +34,6 @@ export default function ForgotPasswordForm() {
           </Button>
         </form>
       )}
-    </Card>
+    </div>
   );
 }

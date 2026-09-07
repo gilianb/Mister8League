@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/cn";
 
 function remaining(targetIso: string) {
   const diff = new Date(targetIso).getTime() - Date.now();
@@ -15,16 +16,9 @@ function remaining(targetIso: string) {
   };
 }
 
-export default function Countdown({
-  targetIso,
-  accent = "gold",
-}: {
-  targetIso: string;
-  accent?: "gold" | "rift";
-}) {
-  const [time, setTime] = useState<ReturnType<typeof remaining> | undefined>(
-    undefined
-  );
+/** Compte à rebours avant le tournoi ; `tone="paper"` sur les billets. */
+export default function Countdown({ targetIso, tone = "club" }: { targetIso: string; tone?: "club" | "paper" }) {
+  const [time, setTime] = useState<ReturnType<typeof remaining> | undefined>(undefined);
 
   useEffect(() => {
     const tick = () => setTime(remaining(targetIso));
@@ -36,25 +30,19 @@ export default function Countdown({
     };
   }, [targetIso]);
 
+  const paper = tone === "paper";
+
   if (time === "today") {
-    return (
-      <p className="text-sm font-semibold text-gold-400 tracking-wide">
-        C&apos;est aujourd&apos;hui, bonne chance à tous !
-      </p>
-    );
+    return <p className={cn("text-sm font-semibold", paper ? "text-poster" : "text-gold-400")}>C&apos;est aujourd&apos;hui. Bonne chance à tous !</p>;
   }
   if (time === "over") {
-    return (
-      <p className="text-sm font-semibold text-cream-600 tracking-wide">
-        Tournoi terminé. Résultats bientôt en ligne.
-      </p>
-    );
+    return <p className={cn("text-sm font-medium", paper ? "text-ink-600" : "text-cream-500")}>Tournoi terminé. Les résultats arrivent.</p>;
   }
 
   const cells = [
-    { value: time?.days, label: "JOURS" },
-    { value: time?.hours, label: "HEURES" },
-    { value: time?.minutes, label: "MIN" },
+    { value: time?.days, label: "jours" },
+    { value: time?.hours, label: "heures" },
+    { value: time?.minutes, label: "min" },
   ];
 
   return (
@@ -62,20 +50,15 @@ export default function Countdown({
       {cells.map((c) => (
         <div
           key={c.label}
-          className={`flex-1 min-w-16 rounded-lg border bg-coal-900 py-2.5 text-center ${
-            accent === "rift" ? "border-rift-400/20" : "hairline"
-          }`}
+          className={cn(
+            "min-w-[4.5rem] flex-1 rounded-control border py-2.5 text-center",
+            paper ? "border-ink/12 bg-paper" : "hairline bg-coal-950"
+          )}
         >
-          <span
-            className={`block text-2xl font-bold tabular ${
-              accent === "rift" ? "text-rift-300" : "text-gold-400"
-            }`}
-          >
+          <span className={cn("display-number block text-[1.75rem]", paper ? "text-ink" : "text-gold-400")}>
             {c.value === undefined ? "–" : String(c.value).padStart(2, "0")}
           </span>
-          <span className="text-[9px] tracking-[0.18em] text-cream-600 font-semibold">
-            {c.label}
-          </span>
+          <span className={cn("mt-1 block text-[11px] font-medium", paper ? "text-ink-400" : "text-cream-600")}>{c.label}</span>
         </div>
       ))}
     </div>

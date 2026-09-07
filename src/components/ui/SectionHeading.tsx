@@ -18,17 +18,15 @@ export function SectionHeading({
 }) {
   const titleClass =
     size === "lg"
-      ? "font-display text-3xl sm:text-4xl font-bold"
+      ? "font-display text-3xl font-semibold tracking-[-0.02em] text-cream-100 sm:text-4xl"
       : size === "sm"
-        ? "text-[11px] tracking-[0.2em] font-semibold text-cream-600 uppercase"
-        : "font-display text-xl sm:text-2xl font-bold";
+        ? "text-[15px] font-semibold text-cream-100"
+        : "font-display text-2xl font-medium tracking-[-0.015em] text-cream-100 sm:text-[1.75rem]";
   return (
-    <div className={cn("flex flex-wrap items-end justify-between gap-3", className)}>
-      <div>
-        {eyebrow && (
-          <p className="text-[11px] tracking-[0.24em] text-gold-400 font-semibold mb-1.5 uppercase">{eyebrow}</p>
-        )}
-        <Tag className={cn(titleClass, size !== "sm" && "text-cream-100")}>{title}</Tag>
+    <div className={cn("flex flex-wrap items-end justify-between gap-x-6 gap-y-3", className)}>
+      <div className="min-w-0">
+        {eyebrow && <div className="kicker mb-2">{eyebrow}</div>}
+        <Tag className={titleClass}>{title}</Tag>
       </div>
       {action && <div className="shrink-0">{action}</div>}
     </div>

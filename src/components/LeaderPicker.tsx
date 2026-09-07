@@ -60,19 +60,19 @@ export default function LeaderPicker({
   }
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <input type="hidden" name={name} value={selectedId ?? ""} />
-      <span className="block text-[11px] tracking-[0.16em] font-semibold text-cream-400">{label}</span>
+      <span className="block text-[13px] font-medium text-cream-300">{label}</span>
       {selected ? (
-        <div className="flex items-center gap-3 rounded-lg border border-coal-700 bg-coal-900 px-3 py-2">
+        <div className="flex items-center gap-3 rounded-control border border-coal-700 bg-coal-950 px-3 py-2">
           {selected.imageUrl && (
-            <img src={selected.imageUrl} alt="" className="h-12 w-12 rounded-md object-cover border border-black/30" style={{ objectPosition: "50% 18%" }} />
+            <img src={selected.imageUrl} alt="" className="size-12 rounded-control border border-black/30 object-cover" style={{ objectPosition: "50% 18%" }} />
           )}
           <div className="min-w-0 flex-1">
             <p className="font-semibold text-cream-100 truncate">{selected.name}</p>
-            <p className="text-xs text-cream-600">
+            <p className="text-xs text-cream-500">
               {selected.code}
-              {selected.colors.length > 0 && ` · ${selected.colors.join(" / ")}`}
+              {selected.colors.length > 0 && `, ${selected.colors.join(" / ")}`}
             </p>
           </div>
           <button type="button" onClick={() => setOpen(true)} className="text-xs text-gold-400 hover:underline">
@@ -88,14 +88,14 @@ export default function LeaderPicker({
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="w-full rounded-lg border border-dashed border-coal-700 bg-coal-900 px-3 py-3 text-left text-sm text-cream-600 hover:border-gold-400/60 hover:text-cream-200"
+          className="h-11 w-full rounded-control border border-dashed border-coal-600 bg-coal-950 px-3.5 text-left text-sm text-cream-500 transition-colors hover:border-gold-400/60 hover:text-cream-200"
         >
           Choisir un leader (facultatif)…
         </button>
       )}
 
       {open && (
-        <div className="rounded-xl border hairline bg-coal-800 p-3 space-y-2">
+        <div className="space-y-3 rounded-panel border hairline bg-coal-800 p-3">
           <Input
             autoFocus
             value={query}
@@ -110,14 +110,14 @@ export default function LeaderPicker({
                   type="button"
                   onClick={() => choose(l.id)}
                   className={cn(
-                    "w-full flex items-center gap-2 rounded-lg border px-2 py-1.5 text-left hover:border-gold-400/60 transition-colors",
-                    l.id === selectedId ? "border-gold-400 bg-gold-400/10" : "border-coal-700 bg-coal-900"
+                    "flex w-full items-center gap-2 rounded-control border px-2 py-1.5 text-left transition-colors hover:border-gold-400/60",
+                    l.id === selectedId ? "border-gold-400 bg-gold-400/10" : "border-coal-700 bg-coal-950"
                   )}
                 >
                   {l.imageUrl ? (
-                    <img src={l.imageUrl} alt="" className="h-10 w-10 rounded-md object-cover border border-black/30 shrink-0" style={{ objectPosition: "50% 18%" }} loading="lazy" />
+                    <img src={l.imageUrl} alt="" className="size-10 shrink-0 rounded-control border border-black/30 object-cover" style={{ objectPosition: "50% 18%" }} loading="lazy" />
                   ) : (
-                    <span className="h-10 w-10 rounded-md bg-coal-700 shrink-0" />
+                    <span className="size-10 shrink-0 rounded-control bg-coal-700" />
                   )}
                   <span className="min-w-0">
                     <span className="block text-xs font-semibold text-cream-100 truncate">{l.name}</span>

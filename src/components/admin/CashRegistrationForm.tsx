@@ -27,8 +27,8 @@ export default function CashRegistrationForm({ eventId, leaders, priceLabel }: {
 
   if (!open) {
     return (
-      <button type="button" onClick={() => setOpen(true)} className="text-sm text-gold-400 hover:underline">
-        + Ajouter un participant payé en boutique
+      <button type="button" onClick={() => setOpen(true)} className="text-link text-sm">
+        Ajouter un participant payé en boutique
       </button>
     );
   }
@@ -37,8 +37,8 @@ export default function CashRegistrationForm({ eventId, leaders, priceLabel }: {
     <Card className="space-y-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h2 className="font-display text-lg font-bold text-cream-100">Inscription en boutique (cash)</h2>
-          <p className="text-xs text-cream-600 mt-1">Crée une inscription payée ({priceLabel}), génère le billet et l&apos;envoie par e-mail.</p>
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Inscription en boutique (cash)</h2>
+          <p className="mt-1 text-[13px] leading-relaxed text-cream-500">Crée une inscription payée ({priceLabel}), génère le billet et l&apos;envoie par e-mail.</p>
         </div>
         <button type="button" onClick={() => setOpen(false)} className="text-xs text-cream-400 hover:text-cream-100">
           Fermer

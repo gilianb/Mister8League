@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import HatLogo from "./HatLogo";
 import UserMenu from "./UserMenu";
+import { Button } from "./ui/Button";
 import { IconMenu, IconX } from "./ui/icons";
 import { cn } from "@/lib/cn";
 
@@ -30,24 +31,26 @@ export default function HeaderNav({ user }: { user: HeaderUser | null }) {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <header className="sticky top-0 z-40 bg-coal-950/95 backdrop-blur border-b hairline">
-      <div className="mx-auto max-w-6xl px-4 flex items-center gap-6 h-16">
-        <Link href="/" className="flex items-center gap-2.5 shrink-0">
-          <HatLogo className="w-9" />
+    <header className="sticky top-0 z-40 border-b hairline bg-coal-950/92 backdrop-blur-md">
+      <div className="page-shell flex h-18 items-center gap-8">
+        <Link href="/" className="flex shrink-0 items-center gap-3" aria-label="Mister 8 Tournament League, accueil">
+          <HatLogo className="w-11" priority />
           <span className="leading-none">
-            <span className="block font-display font-bold tracking-wide text-cream-100 text-lg">MISTER 8</span>
-            <span className="block text-[9px] tracking-[0.28em] text-gold-400 font-semibold">TOURNAMENT LEAGUE</span>
+            <span className="block font-display text-[19px] font-semibold tracking-[-0.01em] text-cream-100">Mister 8</span>
+            <span className="mt-1 block text-[11px] font-medium text-gold-400">Tournament League</span>
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 ml-4">
+        <nav className="hidden items-center gap-7 md:flex" aria-label="Navigation principale">
           {LINKS.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               className={cn(
-                "text-sm transition-colors",
-                isActive(l.href) ? "text-gold-400 font-semibold" : "text-cream-400 hover:text-cream-100"
+                "relative text-[15px] font-medium transition-colors",
+                isActive(l.href)
+                  ? "text-cream-100 after:absolute after:inset-x-0 after:-bottom-[25px] after:h-0.5 after:bg-gold-400"
+                  : "text-cream-400 hover:text-cream-100"
               )}
             >
               {l.label}
@@ -59,16 +62,18 @@ export default function HeaderNav({ user }: { user: HeaderUser | null }) {
           {user ? (
             <UserMenu user={user} />
           ) : (
-            <Link
-              href="/connexion"
-              className="hidden sm:inline-block rounded-full border border-gold-400/60 px-4 py-1.5 text-sm text-gold-400 hover:bg-gold-400 hover:text-coal-950 font-medium transition-colors"
-            >
-              Connexion
-            </Link>
+            <>
+              <Link href="/connexion" className="hidden text-[15px] font-medium text-cream-300 transition-colors hover:text-cream-100 sm:inline">
+                Connexion
+              </Link>
+              <Button href="/connexion?mode=inscription" size="sm" className="hidden sm:inline-flex">
+                Créer un compte
+              </Button>
+            </>
           )}
           <button
-            className="md:hidden text-cream-100 p-2"
-            aria-label="Menu"
+            className="-mr-2 rounded-control p-2 text-cream-100 md:hidden"
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
             aria-expanded={open}
             onClick={() => setOpen(!open)}
           >
@@ -78,29 +83,30 @@ export default function HeaderNav({ user }: { user: HeaderUser | null }) {
       </div>
 
       {open && (
-        <nav className="md:hidden border-t hairline bg-coal-950 px-4 py-3 flex flex-col gap-1">
-          {LINKS.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              onClick={() => setOpen(false)}
-              className={cn(
-                "py-2.5 text-base border-b hairline last:border-0",
-                isActive(l.href) ? "text-gold-400 font-semibold" : "text-cream-200"
-              )}
-            >
-              {l.label}
-            </Link>
-          ))}
-          {!user && (
-            <Link
-              href="/connexion"
-              onClick={() => setOpen(false)}
-              className="mt-2 mb-1 text-center rounded-full border border-gold-400/60 px-4 py-2 text-gold-400 font-medium"
-            >
-              Connexion / Créer un compte
-            </Link>
-          )}
+        <nav className="border-t hairline bg-coal-950 md:hidden" aria-label="Navigation mobile">
+          <div className="page-shell flex flex-col py-3">
+            {LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                onClick={() => setOpen(false)}
+                className={cn(
+                  "border-b hairline py-4 font-display text-2xl font-medium tracking-tight last:border-0",
+                  isActive(l.href) ? "text-gold-300" : "text-cream-100"
+                )}
+              >
+                {l.label}
+              </Link>
+            ))}
+            {!user && (
+              <div className="mt-4 mb-2 grid grid-cols-2 gap-2">
+                <Button href="/connexion" variant="outline">
+                  Connexion
+                </Button>
+                <Button href="/connexion?mode=inscription">Créer un compte</Button>
+              </div>
+            )}
+          </div>
         </nav>
       )}
     </header>

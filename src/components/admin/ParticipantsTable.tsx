@@ -77,32 +77,32 @@ export default function ParticipantsTable({ rows, nowMs }: { rows: ParticipantRo
     <div className="space-y-3">
       <div className="flex flex-wrap items-center gap-2">
         <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Rechercher un nom, e-mail, pseudo, ID Bandai, code billet…" className="max-w-md" />
-        <div className="flex gap-1 rounded-full bg-coal-900 p-1">
+        <div className="flex gap-1 rounded-full border hairline bg-coal-950 p-1">
           {FILTERS.map(([key, label]) => (
-            <button key={key} type="button" onClick={() => setFilter(key)} className={cn("rounded-full px-3 py-1 text-xs font-semibold", filter === key ? "bg-gold-400 text-coal-950" : "text-cream-400 hover:text-cream-100")}>
+            <button key={key} type="button" onClick={() => setFilter(key)} className={cn("rounded-full px-3 py-1.5 text-xs font-semibold transition-colors", filter === key ? "bg-gold-400 text-coal-950" : "text-cream-400 hover:text-cream-100")}>
               {label}
             </button>
           ))}
         </div>
-        <span className="text-xs text-cream-600 ml-auto">{filtered.length} ligne(s)</span>
+        <span className="ml-auto text-[13px] text-cream-500">{filtered.length} ligne(s)</span>
       </div>
       {feedback && <Alert tone={feedback.tone}>{feedback.text}</Alert>}
 
-      <div className="rounded-2xl border hairline bg-coal-800 overflow-hidden">
+      <div className="surface-panel overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-[10px] tracking-[0.16em] text-cream-600 text-left border-b hairline">
-                <th className="px-3 py-3 font-semibold">CODE</th>
-                <th className="px-3 py-3 font-semibold">PARTICIPANT</th>
-                <th className="px-3 py-3 font-semibold">COMPTE</th>
-                <th className="px-3 py-3 font-semibold">LEADER</th>
-                <th className="px-3 py-3 font-semibold">STATUT</th>
-                <th className="px-3 py-3 font-semibold">PAIEMENT</th>
-                <th className="px-3 py-3 font-semibold text-right">ACTIONS</th>
+              <tr className="table-head border-b hairline text-left">
+                <th className="px-3 py-3 font-semibold">Code</th>
+                <th className="px-3 py-3 font-semibold">Participant</th>
+                <th className="px-3 py-3 font-semibold">Compte</th>
+                <th className="px-3 py-3 font-semibold">Leader</th>
+                <th className="px-3 py-3 font-semibold">Statut</th>
+                <th className="px-3 py-3 font-semibold">Paiement</th>
+                <th className="px-3 py-3 font-semibold text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y hairline">
+            <tbody className="divide-y divide-hairline">
               {filtered.map((r) => {
                 const expired = r.status === "pending_payment" && r.expires_at && new Date(r.expires_at).getTime() < nowMs;
                 return (
@@ -138,7 +138,7 @@ export default function ParticipantsTable({ rows, nowMs }: { rows: ParticipantRo
                       {r.payment_provider ? PROVIDER[r.payment_provider] ?? r.payment_provider : "—"}
                       {r.amount_cents != null && <span className="block text-cream-600">{(r.amount_cents / 100).toFixed(2)} €</span>}
                       {r.invoice_url && (
-                        <a href={r.invoice_url} target="_blank" rel="noopener noreferrer" className="text-gold-400 hover:underline">
+                        <a href={r.invoice_url} target="_blank" rel="noopener noreferrer" className="text-gold-400 underline-offset-4 hover:underline">
                           Facture
                         </a>
                       )}
@@ -155,7 +155,7 @@ export default function ParticipantsTable({ rows, nowMs }: { rows: ParticipantRo
                         </button>
                       )}
                       {(r.status === "paid" || r.status === "checked_in") && (
-                        <button type="button" disabled={pending} onClick={() => run("Renvoi du billet", () => resendTicketAction(r.id))} className="text-gold-400 hover:underline">
+                        <button type="button" disabled={pending} onClick={() => run("Renvoi du billet", () => resendTicketAction(r.id))} className="text-gold-400 underline-offset-4 hover:underline">
                           Renvoyer billet
                         </button>
                       )}

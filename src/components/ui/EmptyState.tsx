@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import HatLogo from "@/components/HatLogo";
 import { cn } from "@/lib/cn";
 
+/** Un écran vide est une invitation à agir : titre, explication, action. */
 export function EmptyState({
   title,
   text,
@@ -16,17 +16,10 @@ export function EmptyState({
   compact?: boolean;
 }) {
   return (
-    <div
-      className={cn(
-        "rounded-2xl border border-dashed border-gold-400/25 bg-coal-800/60 text-center",
-        compact ? "px-4 py-6" : "px-6 py-10",
-        className
-      )}
-    >
-      {!compact && <HatLogo className="w-12 mx-auto mb-4 opacity-80" />}
-      <p className="font-display text-lg font-bold text-cream-100">{title}</p>
-      {text && <p className="mt-1.5 text-sm text-cream-400 max-w-[48ch] mx-auto">{text}</p>}
-      {action && <div className="mt-5 flex justify-center">{action}</div>}
+    <div className={cn("rounded-panel border hairline text-center", compact ? "px-5 py-8" : "px-6 py-14", className)}>
+      <p className={cn("font-display font-semibold tracking-tight text-cream-100", compact ? "text-xl" : "text-2xl")}>{title}</p>
+      {text && <p className="mx-auto mt-2 max-w-[46ch] text-sm leading-relaxed text-cream-400">{text}</p>}
+      {action && <div className="mt-6 flex justify-center">{action}</div>}
     </div>
   );
 }

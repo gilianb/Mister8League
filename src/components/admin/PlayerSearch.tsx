@@ -26,7 +26,7 @@ export default function PlayerSearch({ onPick, placeholder = "Nom ou ID Bandaiâ€
     <div className="relative">
       <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={placeholder} className="text-xs py-1.5" />
       {q.trim().length >= 2 && hits.length > 0 && (
-        <ul className="absolute z-20 mt-1 w-full max-h-48 overflow-y-auto rounded-lg border hairline bg-coal-900 shadow-lg text-xs">
+        <ul className="absolute z-20 mt-1 w-full max-h-48 overflow-y-auto rounded-panel border hairline bg-coal-800 text-xs shadow-[0_16px_40px_rgba(0,0,0,.5)]">
           {hits.map((h) => (
             <li key={h.id}>
               <button
@@ -36,7 +36,7 @@ export default function PlayerSearch({ onPick, placeholder = "Nom ou ID Bandaiâ€
                   setQ("");
                   setHits([]);
                 }}
-                className="w-full text-left px-3 py-2 hover:bg-coal-700/60 text-cream-100"
+                className="w-full text-left px-3 py-2 text-cream-100 hover:bg-cream-100/6"
               >
                 {h.display_name}
                 {h.pseudo && h.pseudo !== h.display_name ? ` (${h.pseudo})` : ""}

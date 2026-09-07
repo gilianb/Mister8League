@@ -8,23 +8,24 @@ export const dynamic = "force-dynamic";
 export default function InstallationPage() {
   const missing = missingEnv();
   return (
-    <div className="mx-auto max-w-2xl px-4 py-16">
-      <HatLogo className="w-14 mb-6" />
-      <h1 className="font-display text-3xl font-bold text-cream-100 mb-3">Configuration requise</h1>
-      <p className="text-cream-400 mb-8">
-        Le site a besoin d&apos;un projet Supabase pour fonctionner. Copiez <code className="text-gold-300">.env.example</code>{" "}
-        en <code className="text-gold-300">.env.local</code>, renseignez les valeurs puis relancez le serveur. La marche à
-        suivre complète est dans le README.
+    <div className="page-shell max-w-2xl py-16 sm:py-24">
+      <HatLogo className="mb-6 w-16" />
+      <p className="kicker">Mise en service</p>
+      <h1 className="mt-2 font-display text-4xl font-semibold tracking-[-0.025em] text-cream-100 sm:text-5xl">Configuration requise.</h1>
+      <p className="mt-5 max-w-[58ch] text-base leading-relaxed text-cream-400">
+        Le site a besoin d&apos;un projet Supabase pour fonctionner. Copiez <code className="rounded-control bg-coal-800 px-1.5 py-0.5 text-[13px] text-gold-300">.env.example</code>{" "}
+        en <code className="rounded-control bg-coal-800 px-1.5 py-0.5 text-[13px] text-gold-300">.env.local</code>, renseignez les valeurs puis relancez le serveur. La
+        marche à suivre complète est dans le README.
       </p>
-      <div className="rounded-2xl border hairline bg-coal-800 p-6">
-        <p className="text-[11px] tracking-[0.2em] text-cream-600 font-semibold mb-3">VARIABLES MANQUANTES</p>
+      <div className="surface-panel mt-10 p-6">
+        <h2 className="text-sm font-semibold text-cream-100">Variables manquantes</h2>
         {missing.length === 0 ? (
-          <p className="text-sm text-emerald-300">Toutes les variables sont renseignées. Redémarrez le serveur.</p>
+          <p className="mt-3 text-sm text-emerald-300">Toutes les variables sont renseignées. Redémarrez le serveur.</p>
         ) : (
-          <ul className="space-y-1.5 font-mono text-sm text-cream-100">
+          <ul className="mt-3 space-y-2 font-mono text-sm text-cream-100">
             {missing.map((n) => (
-              <li key={n} className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
+              <li key={n} className="flex items-center gap-2.5">
+                <span className="size-1.5 rounded-full bg-brand" aria-hidden="true" />
                 {n}
               </li>
             ))}

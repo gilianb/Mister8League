@@ -46,8 +46,8 @@ menus (ce ne sont pas des séquences), l'italique sur un seul mot dans les titre
 | En-tête, pied de page, contrôles | `coal-950` | `#141210` |
 | Panneaux | `coal-800` | `#26221E` |
 | Filets, bordures de champs | `coal-700` | `#332E28` |
-| Paille (accent signature) | `gold-400` | `#F6C36B` |
-| Ruban (action principale) | `brand` | `#E8392B` |
+| Paille (accent signature, action principale sur fond sombre) | `gold-400` | `#F6C36B` |
+| Ruban (engagement : réserver, payer, confirmer) | `brand` | `#E8392B` |
 | Ivoire (texte) | `cream-200` / `cream-100` | `#F3EBDA` / `#F9F3E6` |
 | Papier (surfaces claires : billets, règlement) | `paper` / `paper-50` | `#F2E9D6` / `#FAF5EA` |
 | Encre (texte sur papier) | `ink` | `#221F1C` |
@@ -104,9 +104,9 @@ une ombre portée.
 
 ## 3. Kit UI (src/components/ui)
 
-- `Button` : `brand` (ruban, texte blanc — action principale), `gold` (paille, texte
-  encre — action secondaire forte), `outline` (filet ivoire), `ghost`, `danger`,
-  `paper` (encre sur papier). Hauteurs 36 / 44 / 52 px, rayon 6 px, casse de phrase,
+- `Button` : `gold` (paille, texte encre : action principale par défaut sur fond
+  sombre), `brand` (ruban, texte blanc : réserver, payer, confirmer), `outline`
+  (filet ivoire), `ghost`, `danger`, `paper` (encre sur papier). Hauteurs 36 / 44 / 52 px, rayon 6 px, casse de phrase,
   état `pending` avec spinner, focus visible or.
 - `Card` : `club` (panneau sombre), `paper` (papier, filet encre), `subtle` (fond
   transparent, filet seul). Plus de double cadre.
@@ -126,8 +126,9 @@ une ombre portée.
 - `Avatar` : inchangé (cercle, initiale en Fraunces).
 - `HatLogo` : rend désormais le PNG du chapeau (emblème officiel).
 
-Utilitaires CSS (`globals.css`) : `page-shell`, `hairline`, `surface-panel`,
-`ticket` (papier, rayon 14 px, encoches), `ticket-stub` (perforation), `kicker`
+Utilitaires CSS (`globals.css`) : `page-shell`, `hairline`, `divide-hairline`,
+`surface-panel`, `ticket` (papier, rayon 14 px), `ticket-perforation` (pointillé et
+encoches ; variante `-plain` sans encoches sur photo), `table-head`, `kicker`
 (libellé 13 px semi-gras or, casse de phrase, utilisé seulement quand le libellé
 apporte une information : saison, date, statut), `text-link` (lien ivoire souligné
 or au survol), `tabular`, `display-number` (Fraunces, chiffres tabulaires).

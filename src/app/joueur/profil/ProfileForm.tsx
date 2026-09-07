@@ -21,13 +21,17 @@ export default function ProfileForm({ initial, email, next }: { initial: Initial
   const [state, action] = useActionState(updateProfileAction, {} as ActionState);
   const fe = state.fieldErrors ?? {};
   return (
-    <Card>
+    <Card padding="lg">
       <form action={action} className="space-y-5">
         <input type="hidden" name="next" value={next} />
         {state.error && <Alert tone="error">{state.error}</Alert>}
         {state.ok && <Alert tone="success">{state.message}</Alert>}
 
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="border-b hairline pb-4">
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Mes informations</h2>
+          <p className="mt-1 text-[13px] text-cream-500">Nécessaires pour vous inscrire et rattacher vos résultats.</p>
+        </div>
+        <div className="grid gap-5 sm:grid-cols-2">
           <Field label="Pseudo" htmlFor="p-pseudo" required error={fe.pseudo} hint="Affiché dans les classements et sur votre profil public.">
             <Input id="p-pseudo" name="pseudo" defaultValue={initial.pseudo} required invalid={!!fe.pseudo} />
           </Field>
@@ -35,7 +39,7 @@ export default function ProfileForm({ initial, email, next }: { initial: Initial
             <Input id="p-name" name="full_name" defaultValue={initial.full_name} autoComplete="name" required invalid={!!fe.full_name} />
           </Field>
         </div>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="grid gap-5 sm:grid-cols-2">
           <Field
             label="Numéro de membre Bandai"
             htmlFor="p-bandai"
@@ -52,11 +56,15 @@ export default function ProfileForm({ initial, email, next }: { initial: Initial
         <Field label="E-mail" htmlFor="p-email" hint="Modifiable sur demande auprès de l'organisation.">
           <Input id="p-email" value={email} disabled readOnly />
         </Field>
+        <div className="border-t hairline pt-6 pb-1">
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Mon profil public</h2>
+          <p className="mt-1 text-[13px] text-cream-500">Ce que les autres joueurs voient sur votre page.</p>
+        </div>
         <Field label="Bio" htmlFor="p-bio" hint="Quelques mots pour votre profil public (400 caractères max).">
           <Textarea id="p-bio" name="bio" defaultValue={initial.bio} maxLength={400} rows={3} placeholder="Joueur depuis OP01, fan de Zoro rouge…" />
         </Field>
-        <Checkbox name="is_public" defaultChecked={initial.is_public} label="Profil public (statistiques et decks publics visibles par les autres joueurs)" />
-        <div className="flex justify-end">
+        <Checkbox name="is_public" defaultChecked={initial.is_public} label="Rendre mon profil public : statistiques et decks publics visibles par les autres joueurs." />
+        <div className="flex justify-end border-t hairline pt-6">
           <SubmitButton pendingText="Enregistrement…">{next ? "Enregistrer et continuer" : "Enregistrer"}</SubmitButton>
         </div>
       </form>
