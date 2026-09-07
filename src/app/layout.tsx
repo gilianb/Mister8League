@@ -35,7 +35,11 @@ export default function RootLayout({
   const configured = isSupabaseConfigured();
   return (
     <html lang="fr" className={`${fraunces.variable} ${archivo.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+      {/* Les extensions du navigateur (Grammarly : data-gr-ext-installed…) ajoutent
+          des attributs au <body> avant l'hydratation de React. suppressHydrationWarning
+          ne porte que sur les attributs et le texte de cet élément, pas sur ses
+          descendants : les vrais écarts d'hydratation restent signalés. */}
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <Header />
         <main className="flex-1">{configured ? children : <InstallationPage />}</main>
         <Footer />
