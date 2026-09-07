@@ -23,6 +23,18 @@ npm run build
 Sans `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`, le site
 affiche une page « Configuration requise » qui liste les variables manquantes.
 
+### Port du serveur de développement
+
+`npm run dev` sert le site **sur le port de `NEXT_PUBLIC_SITE_URL`** (3000 par
+défaut) et refuse de démarrer si ce port est déjà pris. C'est volontaire :
+`next dev` seul bascule silencieusement sur le port suivant quand 3000 est
+occupé, et le site répond alors sur 3001 pendant que les retours de paiement
+Mollie, les liens des e-mails, le QR des billets et les redirections de
+connexion continuent de pointer sur 3000 — c'est-à-dire sur l'application qui
+occupe ce port. Si le port est occupé : arrêter l'autre application, ou choisir
+un autre port pour la ligue via `NEXT_PUBLIC_SITE_URL` (les deux restent ainsi
+toujours cohérents).
+
 ## Variables d'environnement
 
 | Variable | Rôle |
