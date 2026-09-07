@@ -31,6 +31,7 @@ affiche une page « Configuration requise » qui liste les variables manquantes.
 | `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` | projet Supabase (Settings → API) |
 | `SUPABASE_SERVICE_ROLE_KEY` | clé service role, serveur uniquement |
 | `MOLLIE_API_KEY` | `test_…` en développement, `live_…` en production |
+| `MOLLIE_WEBHOOK_URL` | facultatif : URL publique du webhook (tunnel) pour tester le webhook en local |
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_SECURE` | envoi des e-mails (billet, notifications) |
 | `EMAIL_TOURNAMENT_FROM` | expéditeur no-reply |
 | `EMAIL_TOURNAMENT_REPLY_TO` | adresse de réponse affichée (tournois uniquement) |
@@ -71,10 +72,18 @@ affiche une page « Configuration requise » qui liste les variables manquantes.
 ## Mollie
 
 - Créer un profil de site sur Mollie, récupérer la clé API test puis live.
-- Le webhook est `POST {NEXT_PUBLIC_SITE_URL}/api/mollie/webhook` (renseigné
-  automatiquement à chaque paiement). En local, exposer le serveur avec un
-  tunnel (`ngrok http 3000` ou `cloudflared tunnel`), et mettre cette URL dans
-  `NEXT_PUBLIC_SITE_URL` le temps des tests.
+- Le webhook est `POST {NEXT_PUBLIC_SITE_URL}/api/mollie/webhook`, renseigné
+  automatiquement à chaque paiement.
+- **En local, le webhook est volontairement omis.** Mollie l'appelle depuis ses
+  propres serveurs et refuse la création du paiement (422 « webhook URL […]
+  unreachable ») si l'URL pointe sur `localhost` ou une IP privée. Le paiement
+  test fonctionne sans lui : la page de retour re-interroge Mollie et confirme
+  l'inscription (facture, billet, e-mails).
+- Pour tester le webhook lui-même en local : exposer le serveur avec un tunnel
+  (`ngrok http 3000` ou `cloudflared tunnel`) et mettre l'URL publique dans
+  `MOLLIE_WEBHOOK_URL` (ex. `https://abc123.ngrok-free.app/api/mollie/webhook`).
+  En production, `NEXT_PUBLIC_SITE_URL` étant public, le webhook est envoyé
+  normalement et `MOLLIE_WEBHOOK_URL` reste vide.
 - Les factures sont créées via l'API *Sales Invoices* (TVA 20 % incluse,
   statut brouillon) quand l'adresse de facturation est renseignée. Elles sont
   visibles dans le dashboard Mollie et sur la page de confirmation du joueur.

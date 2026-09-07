@@ -18,6 +18,10 @@ export function humanizeMollieError(message: string): string {
   if (m.includes("unauthorized") || m.includes("authentication") || m.includes("api key")) {
     return "Le paiement n'est pas correctement configuré. Contactez-nous.";
   }
+  if (m.includes("webhook") || m.includes("redirecturl")) {
+    // URL du site injoignable par Mollie : erreur de configuration serveur.
+    return "Le paiement n'est pas correctement configuré (URL du site). Contactez-nous.";
+  }
   return "Impossible de démarrer le paiement Mollie. Réessayez plus tard ou contactez-nous.";
 }
 
@@ -39,7 +43,8 @@ export async function mollieCreatePayment(params: {
   currency: string; // "EUR"
   description: string;
   redirectUrl: string;
-  webhookUrl: string;
+  /** Omis (null) quand le site n'est pas joignable depuis Mollie — cf. resolveMollieWebhookUrl. */
+  webhookUrl: string | null;
   metadata?: Record<string, unknown>;
 }): Promise<{ id: string; checkoutUrl: string; status: string }> {
   const mollie = client();
@@ -47,7 +52,7 @@ export async function mollieCreatePayment(params: {
     amount: { value: params.amountValue, currency: params.currency },
     description: params.description,
     redirectUrl: params.redirectUrl,
-    webhookUrl: params.webhookUrl,
+    ...(params.webhookUrl ? { webhookUrl: params.webhookUrl } : {}),
     metadata: params.metadata ?? {},
   })) as unknown as MolliePayment;
 

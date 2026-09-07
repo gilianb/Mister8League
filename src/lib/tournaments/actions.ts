@@ -12,6 +12,7 @@ import { computeTotals, centsToMollieValue, safeCurrency } from "@/lib/payments/
 import { sanitizeBilling } from "@/lib/payments/billing";
 import { fulfilRegistration, markRegistrationPaid } from "@/lib/payments/fulfil";
 import { humanizeMollieError, isMollieResumable, mollieCancelPayment, mollieCheckoutUrl, mollieCreatePayment, mollieGetPayment } from "@/lib/payments/mollie";
+import { resolveMollieWebhookUrl } from "@/lib/payments/webhook-url";
 import { humanizeReserveError } from "./codes";
 import { isActiveRegistration } from "./status";
 
@@ -31,7 +32,7 @@ async function createMolliePaymentFor(reg: RegistrationRow, event: EventRow, tot
     currency,
     description: paymentDescription(event),
     redirectUrl: `${base}/tournois/paiement/retour?inscription=${encodeURIComponent(reg.id)}`,
-    webhookUrl: `${base}/api/mollie/webhook`,
+    webhookUrl: resolveMollieWebhookUrl(base, process.env.MOLLIE_WEBHOOK_URL),
     metadata: { registrationId: reg.id, eventId: event.id, profileId: reg.profile_id },
   });
   const admin = createAdminSupabase();
@@ -157,6 +158,7 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
     const mp = await createMolliePaymentFor(reg, event, totals.totalCents, safeCurrency(event.currency));
     checkoutUrl = mp.checkoutUrl;
   } catch (e) {
+    console.error("[mollie] création du paiement", e);
     await cancelRegistration(regId, null, "create_payment_failed");
     return { error: humanizeMollieError(e instanceof Error ? e.message : "") };
   }
@@ -207,6 +209,7 @@ export async function resumeCheckoutAction(registrationId: string): Promise<Acti
       target = mp.checkoutUrl;
     }
   } catch (e) {
+    console.error("[mollie] reprise du paiement", e);
     return { error: humanizeMollieError(e instanceof Error ? e.message : "") };
   }
   redirect(target);
