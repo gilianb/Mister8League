@@ -129,9 +129,10 @@ export default async function InscriptionConfirmationPage({ params, searchParams
 
       {paid && !started && (
         <section className="surface-panel mt-8 p-6 sm:p-7">
-          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Deck déclaré</h2>
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Deck et leader</h2>
           <p className="mt-1 mb-5 text-[13px] leading-relaxed text-cream-500">
-            Modifiable jusqu&apos;au début du tournoi. Il sert à préremplir le leader dans les résultats.
+            Modifiables autant de fois que vous voulez, jusqu&apos;au début du tournoi. Le leader déclaré
+            préremplit vos résultats et alimente le métagame du tournoi.
           </p>
           <DeckDeclarationForm
             registrationId={reg.id}
