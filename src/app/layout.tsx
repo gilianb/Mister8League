@@ -33,8 +33,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const configured = isSupabaseConfigured();
+  // data-scroll-behavior : globals.css pose `scroll-behavior: smooth` pour les
+  // ancres internes. Depuis Next 16, ce réglage n'est plus neutralisé pendant les
+  // navigations — le retour en haut de page se ferait donc en glissant. L'attribut
+  // rétablit la neutralisation, le temps de la navigation seulement.
   return (
-    <html lang="fr" className={`${fraunces.variable} ${archivo.variable} h-full antialiased`}>
+    <html
+      lang="fr"
+      data-scroll-behavior="smooth"
+      className={`${fraunces.variable} ${archivo.variable} h-full antialiased`}
+    >
       {/* Les extensions du navigateur (Grammarly : data-gr-ext-installed…) ajoutent
           des attributs au <body> avant l'hydratation de React. suppressHydrationWarning
           ne porte que sur les attributs et le texte de cet élément, pas sur ses
