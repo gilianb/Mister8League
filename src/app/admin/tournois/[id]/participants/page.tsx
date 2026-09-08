@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getEventById } from "@/lib/db/events";
 import { listLeaders, toLeaderOptions } from "@/lib/db/leaders";
 import { createAdminSupabase } from "@/lib/supabase/admin";
+import { REGISTRANT_PROFILE } from "@/lib/db/embeds";
 import { currentTimeMs } from "@/lib/clock";
 import { formatDateTime } from "@/lib/format";
 import { formatEuros } from "@/lib/money";
@@ -41,14 +42,17 @@ export default async function ParticipantsPage({ params }: Props) {
   if (!event) notFound();
 
   const admin = createAdminSupabase();
-  const { data: raw } = await admin
+  const { data: raw, error } = await admin
     .from("registrations")
     .select(
-      "id, status, participant_name, participant_email, participant_phone, notes, payment_provider, amount_cents, created_at, checked_in_at, expires_at, mollie_sales_invoice_pdf_url, profile:profiles(pseudo, bandai_member_id), leader:leaders(name)"
+      `id, status, participant_name, participant_email, participant_phone, notes, payment_provider, amount_cents, created_at, checked_in_at, expires_at, mollie_sales_invoice_pdf_url, profile:${REGISTRANT_PROFILE}(pseudo, bandai_member_id), leader:leaders(name)`
     )
     .eq("event_id", event.id)
     .order("created_at", { ascending: true })
     .returns<RawRow[]>();
+  // Sans cette vérification, une requête en échec passerait pour un tournoi
+  // sans inscrit : la page afficherait « 0 / capacité » et « Aucune inscription ».
+  if (error) throw new Error(`Lecture des inscriptions impossible : ${error.message}`);
 
   const rows: ParticipantRow[] = (raw ?? []).map((r) => ({
     id: r.id,

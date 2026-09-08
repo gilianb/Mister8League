@@ -1,6 +1,7 @@
 import "server-only";
 import { createAdminSupabase } from "@/lib/supabase/admin";
 import type { PlayerRow, ResultImportLineRow, ResultImportRow, RowResolution } from "@/lib/db/types";
+import { REGISTRANT_PROFILE } from "@/lib/db/embeds";
 import { parseBandaiCsv, inferRounds, normalizeBandaiId, type BandaiRow } from "./bandai-csv";
 import { matchRows, type MatchPlayer, type MatchRegistration } from "./matching";
 
@@ -21,12 +22,15 @@ type RegistrationForMatch = {
 
 async function loadEventRegistrations(eventId: string): Promise<RegistrationForMatch[]> {
   const admin = createAdminSupabase();
-  const { data } = await admin
+  const { data, error } = await admin
     .from("registrations")
-    .select("id, profile_id, participant_name, leader_id, deck_id, status, profile:profiles(pseudo, bandai_member_id)")
+    .select(`id, profile_id, participant_name, leader_id, deck_id, status, profile:${REGISTRANT_PROFILE}(pseudo, bandai_member_id)`)
     .eq("event_id", eventId)
     .in("status", ["paid", "checked_in"])
     .returns<RegistrationForMatch[]>();
+  // Une liste vide ferait passer tous les inscrits pour absents : le
+  // rapprochement des résultats Bandai échouerait en silence.
+  if (error) throw new Error(`Lecture des inscriptions impossible : ${error.message}`);
   return data ?? [];
 }
 
@@ -125,7 +129,7 @@ export async function getPendingImport(eventId: string): Promise<{ imp: ResultIm
   const [{ data: rows }, registrations] = await Promise.all([
     admin
       .from("result_import_rows")
-      .select("*, player:players(id, display_name, bandai_member_id, profile:profiles(pseudo)), registration:registrations(id, participant_name, profile:profiles(pseudo, bandai_member_id)), leader:leaders(id, name, code, image_url)")
+      .select(`*, player:players(id, display_name, bandai_member_id, profile:profiles(pseudo)), registration:registrations(id, participant_name, profile:${REGISTRANT_PROFILE}(pseudo, bandai_member_id)), leader:leaders(id, name, code, image_url)`)
       .eq("import_id", imp.id)
       .order("placement", { ascending: true })
       .returns<ImportRowView[]>(),

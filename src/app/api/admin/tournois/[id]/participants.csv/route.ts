@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSessionWithProfile } from "@/lib/auth/session";
 import { createAdminSupabase } from "@/lib/supabase/admin";
+import { REGISTRANT_PROFILE } from "@/lib/db/embeds";
 import { registrationCode } from "@/lib/tournaments/codes";
 
 export const runtime = "nodejs";
@@ -37,14 +38,16 @@ export async function GET(_req: Request, ctx: { params: Promise<{ id: string }> 
   const { data: event } = await admin.from("events").select("slug").eq("id", id).maybeSingle<{ slug: string }>();
   if (!event) return NextResponse.json({ error: "Tournoi introuvable." }, { status: 404 });
 
-  const { data: rows } = await admin
+  const { data: rows, error } = await admin
     .from("registrations")
     .select(
-      "id, status, created_at, participant_name, participant_email, participant_phone, payment_provider, amount_cents, checked_in_at, mollie_payment_id, mollie_sales_invoice_number, profile:profiles(pseudo, bandai_member_id), leader:leaders(name, code)"
+      `id, status, created_at, participant_name, participant_email, participant_phone, payment_provider, amount_cents, checked_in_at, mollie_payment_id, mollie_sales_invoice_number, profile:${REGISTRANT_PROFILE}(pseudo, bandai_member_id), leader:leaders(name, code)`
     )
     .eq("event_id", id)
     .order("created_at", { ascending: true })
     .returns<Row[]>();
+  // Un export vide se confondrait avec un tournoi sans inscrit : mieux vaut échouer.
+  if (error) return NextResponse.json({ error: "Export impossible." }, { status: 500 });
 
   const header = ["code", "statut", "cree_le", "nom", "email", "telephone", "pseudo", "id_bandai", "leader", "leader_code", "paiement", "montant_eur", "check_in", "mollie_payment_id", "facture"];
   const lines = [
