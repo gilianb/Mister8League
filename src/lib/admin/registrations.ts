@@ -9,6 +9,7 @@ import { sanitizeBilling } from "@/lib/payments/billing";
 import { fulfilRegistration, markRegistrationPaid, resendTicketEmail } from "@/lib/payments/fulfil";
 import { mollieCancelPayment } from "@/lib/payments/mollie";
 import { adminUserId, formStr, logAdminEvent } from "./guard";
+import { keepValues } from "@/lib/forms";
 
 /** Inscription « cash » (paiement en boutique) créée par l'admin : payée, facturée, billet + e-mail. */
 export async function addCashRegistrationAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -23,6 +24,7 @@ export async function addCashRegistrationAction(_prev: ActionState, formData: Fo
   const pseudo = formStr(formData, "profile_pseudo");
   const leaderId = formStr(formData, "leader_id") || null;
   const withInvoice = formData.get("with_invoice") === "on";
+  const values = keepValues(formData, ["participant_name", "participant_email", "participant_phone", "notes", "profile_pseudo", "billing_street", "billing_postal_code", "billing_city", "billing_country", "billing_company", "billing_vat"]);
 
   const fieldErrors: Record<string, string> = {};
   const e1 = validateFullName(name);
@@ -32,7 +34,7 @@ export async function addCashRegistrationAction(_prev: ActionState, formData: Fo
 
   const admin = createAdminSupabase();
   const { data: event } = await admin.from("events").select("*").eq("id", eventId).maybeSingle<EventRow>();
-  if (!event) return { error: "Tournoi introuvable." };
+  if (!event) return { error: "Tournoi introuvable.", values };
 
   let profileId: string | null = null;
   if (pseudo) {
@@ -60,12 +62,12 @@ export async function addCashRegistrationAction(_prev: ActionState, formData: Fo
       )
     : null;
   if (withInvoice && !billing) fieldErrors.billing = "Adresse de facturation incomplète.";
-  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, error: "Vérifiez les champs signalés." };
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, error: "Vérifiez les champs signalés.", values };
 
   // Capacité (places actives)
   const { data: seats } = await admin.from("event_seat_counts").select("active_count").eq("event_id", eventId).maybeSingle<{ active_count: number }>();
   if (event.capacity > 0 && (seats?.active_count ?? 0) >= event.capacity) {
-    return { error: "Le tournoi est complet." };
+    return { error: "Le tournoi est complet.", values };
   }
 
   const { data: reg, error } = await admin
@@ -87,7 +89,7 @@ export async function addCashRegistrationAction(_prev: ActionState, formData: Fo
     })
     .select("*")
     .single<RegistrationRow>();
-  if (error || !reg) return { error: error?.message ?? "Création impossible." };
+  if (error || !reg) return { error: error?.message ?? "Création impossible.", values };
 
   await admin.from("payment_events").insert({ registration_id: reg.id, provider: "cash", event_type: "admin_cash_paid", provider_ref: `cash:${reg.id}`, payload: { adminId, totalCents: totals.totalCents } });
   await logAdminEvent({ adminId, action: "cash_registration", eventId, registrationId: reg.id, toStatus: "paid" });

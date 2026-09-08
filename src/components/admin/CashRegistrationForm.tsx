@@ -50,36 +50,36 @@ export default function CashRegistrationForm({ eventId, leaders, priceLabel }: {
         {state.ok && <Alert tone="success">{state.message}</Alert>}
         <div className="grid gap-4 md:grid-cols-3">
           <Field label="Nom complet" htmlFor="c-name" required error={fe.participant_name}>
-            <Input id="c-name" name="participant_name" required />
+            <Input id="c-name" name="participant_name" required defaultValue={state.values?.participant_name ?? ""} />
           </Field>
           <Field label="E-mail" htmlFor="c-email" required error={fe.participant_email}>
-            <Input id="c-email" name="participant_email" type="email" required />
+            <Input id="c-email" name="participant_email" type="email" required defaultValue={state.values?.participant_email ?? ""} />
           </Field>
           <Field label="Téléphone" htmlFor="c-phone">
-            <Input id="c-phone" name="participant_phone" type="tel" />
+            <Input id="c-phone" name="participant_phone" type="tel" defaultValue={state.values?.participant_phone ?? ""} />
           </Field>
         </div>
         <div className="grid gap-4 md:grid-cols-2">
           <Field label="Pseudo du compte (facultatif)" htmlFor="c-pseudo" error={fe.profile_pseudo} hint="Relie l'inscription à un compte joueur existant.">
-            <Input id="c-pseudo" name="profile_pseudo" />
+            <Input id="c-pseudo" name="profile_pseudo" defaultValue={state.values?.profile_pseudo ?? ""} />
           </Field>
           <LeaderPicker leaders={leaders} name="leader_id" label="Leader déclaré (facultatif)" />
         </div>
         <Field label="Notes" htmlFor="c-notes">
-          <Textarea id="c-notes" name="notes" rows={2} />
+          <Textarea id="c-notes" name="notes" rows={2} defaultValue={state.values?.notes ?? ""} />
         </Field>
         <Checkbox name="with_invoice" checked={withInvoice} onChange={(e) => setWithInvoice(e.target.checked)} label="Émettre une facture Mollie (adresse requise)" />
         {withInvoice && (
           <div className="grid gap-4 md:grid-cols-4">
             {fe.billing && <p className="md:col-span-4 text-xs text-red-300">{fe.billing}</p>}
             <Field label="Rue" htmlFor="c-street" className="md:col-span-2">
-              <Input id="c-street" name="billing_street" />
+              <Input id="c-street" name="billing_street" defaultValue={state.values?.billing_street ?? ""} />
             </Field>
             <Field label="Code postal" htmlFor="c-postal">
-              <Input id="c-postal" name="billing_postal_code" />
+              <Input id="c-postal" name="billing_postal_code" defaultValue={state.values?.billing_postal_code ?? ""} />
             </Field>
             <Field label="Ville" htmlFor="c-city">
-              <Input id="c-city" name="billing_city" />
+              <Input id="c-city" name="billing_city" defaultValue={state.values?.billing_city ?? ""} />
             </Field>
             <Field label="Pays" htmlFor="c-country">
               <Input id="c-country" name="billing_country" defaultValue="FR" maxLength={2} />

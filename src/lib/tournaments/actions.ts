@@ -14,6 +14,7 @@ import { fulfilRegistration, markRegistrationPaid } from "@/lib/payments/fulfil"
 import { humanizeMollieError, isMollieResumable, mollieCancelPayment, mollieCheckoutUrl, mollieCreatePayment, mollieGetPayment } from "@/lib/payments/mollie";
 import { resolveMollieWebhookUrl } from "@/lib/payments/webhook-url";
 import { humanizeReserveError } from "./codes";
+import { keepValues } from "@/lib/forms";
 import { isActiveRegistration } from "./status";
 
 function str(fd: FormData, key: string): string {
@@ -83,6 +84,9 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
   const notes = str(formData, "notes");
   const deckId = str(formData, "deck_id") || null;
   const leaderId = str(formData, "leader_id") || null;
+  // Le deck et le leader sont pilotés par React ; le reste doit être renvoyé,
+  // sinon une case oubliée efface l'adresse de facturation.
+  const values = keepValues(formData, ["participant_name", "participant_email", "participant_phone", "notes", "billing_street", "billing_postal_code", "billing_city", "billing_country", "billing_company", "billing_vat"]);
 
   const fieldErrors: Record<string, string> = {};
   const e1 = validateFullName(participantName);
@@ -93,7 +97,7 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
 
   const supabase = await createServerSupabase();
   const { data: event } = await supabase.from("events").select("*").eq("id", eventId).maybeSingle<EventRow>();
-  if (!event) return { error: "Tournoi introuvable." };
+  if (!event) return { error: "Tournoi introuvable.", values };
 
   const totals = computeTotals(event.price_cents, event.fee_bps);
   const billing =
@@ -113,7 +117,7 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
   if (totals.totalCents > 0 && !billing) {
     fieldErrors.billing = "Adresse de facturation incomplète (rue, code postal, ville, pays à 2 lettres).";
   }
-  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, error: "Vérifiez les champs signalés." };
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, error: "Vérifiez les champs signalés.", values };
 
   // 1) Réservation de place (fonction SQL, verrou sur l'événement)
   const { data: reservedId, error: rErr } = await supabase.rpc("reserve_seat", {
@@ -123,7 +127,7 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
     p_phone: participantPhone || null,
     p_notes: notes || null,
   });
-  if (rErr || !reservedId) return { error: humanizeReserveError(rErr?.message ?? "") };
+  if (rErr || !reservedId) return { error: humanizeReserveError(rErr?.message ?? ""), values };
   const regId = String(reservedId);
 
   const admin = createAdminSupabase();
@@ -160,7 +164,7 @@ export async function startCheckoutAction(_prev: ActionState, formData: FormData
   } catch (e) {
     console.error("[mollie] création du paiement", e);
     await cancelRegistration(regId, null, "create_payment_failed");
-    return { error: humanizeMollieError(e instanceof Error ? e.message : "") };
+    return { error: humanizeMollieError(e instanceof Error ? e.message : ""), values };
   }
   redirect(checkoutUrl);
 }

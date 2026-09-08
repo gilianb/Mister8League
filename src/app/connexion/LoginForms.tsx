@@ -55,7 +55,7 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
             </Alert>
           )}
           <Field label="E-mail" htmlFor="signin-email" required>
-            <Input id="signin-email" name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" required />
+            <Input id="signin-email" name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" required defaultValue={signInState.values?.email ?? ""} />
           </Field>
           <Field label="Mot de passe" htmlFor="signin-password" required>
             <Input id="signin-password" name="password" type="password" autoComplete="current-password" required />
@@ -75,10 +75,10 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
           {signUpState.error && <Alert tone="error">{signUpState.error}</Alert>}
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Pseudo" htmlFor="su-pseudo" required error={signUpState.fieldErrors?.pseudo} hint="Affiché dans les classements.">
-              <Input id="su-pseudo" name="pseudo" autoComplete="nickname" placeholder="Luffy_92" required invalid={!!signUpState.fieldErrors?.pseudo} />
+              <Input id="su-pseudo" name="pseudo" autoComplete="nickname" placeholder="Luffy_92" required invalid={!!signUpState.fieldErrors?.pseudo} defaultValue={signUpState.values?.pseudo ?? ""} />
             </Field>
             <Field label="Nom complet" htmlFor="su-name" required error={signUpState.fieldErrors?.full_name} hint="Pour votre billet et le check-in.">
-              <Input id="su-name" name="full_name" autoComplete="name" placeholder="Prénom Nom" required invalid={!!signUpState.fieldErrors?.full_name} />
+              <Input id="su-name" name="full_name" autoComplete="name" placeholder="Prénom Nom" required invalid={!!signUpState.fieldErrors?.full_name} defaultValue={signUpState.values?.full_name ?? ""} />
             </Field>
           </div>
           <Field
@@ -88,10 +88,10 @@ export default function LoginForms({ initialMode, next }: { initialMode: Mode; n
             error={signUpState.fieldErrors?.bandai_member_id}
             hint="Dans l'app Bandai TCG+ : Profil → « Membership number » (10 chiffres). Il relie vos résultats de tournoi à votre compte."
           >
-            <Input id="su-bandai" name="bandai_member_id" inputMode="numeric" placeholder="0000123456" required invalid={!!signUpState.fieldErrors?.bandai_member_id} />
+            <Input id="su-bandai" name="bandai_member_id" inputMode="numeric" placeholder="0000123456" required invalid={!!signUpState.fieldErrors?.bandai_member_id} defaultValue={signUpState.values?.bandai_member_id ?? ""} />
           </Field>
           <Field label="E-mail" htmlFor="su-email" required error={signUpState.fieldErrors?.email}>
-            <Input id="su-email" name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" required invalid={!!signUpState.fieldErrors?.email} />
+            <Input id="su-email" name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" required invalid={!!signUpState.fieldErrors?.email} defaultValue={signUpState.values?.email ?? ""} />
           </Field>
           <Field label="Mot de passe" htmlFor="su-password" required error={signUpState.fieldErrors?.password} hint="8 caractères minimum.">
             <Input id="su-password" name="password" type="password" autoComplete="new-password" required minLength={8} invalid={!!signUpState.fieldErrors?.password} />

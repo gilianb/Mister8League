@@ -61,18 +61,18 @@ export default function RegisterForm({
         <FormSection title="Participant">
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Nom complet" htmlFor="r-name" required error={state.fieldErrors?.participant_name} hint="Tel qu'il apparaîtra sur le billet.">
-              <Input id="r-name" name="participant_name" defaultValue={profile.fullName} autoComplete="name" required />
+              <Input id="r-name" name="participant_name" defaultValue={state.values?.participant_name ?? profile.fullName} autoComplete="name" required />
             </Field>
             <Field label="E-mail" htmlFor="r-email" required error={state.fieldErrors?.participant_email} hint="Le billet est envoyé à cette adresse.">
-              <Input id="r-email" name="participant_email" type="email" defaultValue={profile.email} autoComplete="email" required />
+              <Input id="r-email" name="participant_email" type="email" defaultValue={state.values?.participant_email ?? profile.email} autoComplete="email" required />
             </Field>
           </div>
           <div className="grid gap-5 sm:grid-cols-2">
             <Field label="Téléphone" htmlFor="r-phone" hint="Pour vous joindre le jour J.">
-              <Input id="r-phone" name="participant_phone" type="tel" defaultValue={profile.phone} autoComplete="tel" placeholder="06 12 34 56 78" />
+              <Input id="r-phone" name="participant_phone" type="tel" defaultValue={state.values?.participant_phone ?? profile.phone} autoComplete="tel" placeholder="06 12 34 56 78" />
             </Field>
             <Field label="Remarque pour l'organisation" htmlFor="r-notes">
-              <Textarea id="r-notes" name="notes" rows={2} className="min-h-11" placeholder="Facultatif" />
+              <Textarea id="r-notes" name="notes" rows={2} className="min-h-11" placeholder="Facultatif" defaultValue={state.values?.notes ?? ""} />
             </Field>
           </div>
         </FormSection>
@@ -107,25 +107,25 @@ export default function RegisterForm({
           <FormSection title="Adresse de facturation" hint="Nécessaire pour émettre votre facture.">
             {state.fieldErrors?.billing && <Alert tone="error">{state.fieldErrors.billing}</Alert>}
             <Field label="Rue et numéro" htmlFor="b-street" required>
-              <Input id="b-street" name="billing_street" autoComplete="street-address" placeholder="12 rue de la Marine" required />
+              <Input id="b-street" name="billing_street" autoComplete="street-address" placeholder="12 rue de la Marine" required defaultValue={state.values?.billing_street ?? ""} />
             </Field>
             <div className="grid gap-5 sm:grid-cols-3">
               <Field label="Code postal" htmlFor="b-postal" required>
-                <Input id="b-postal" name="billing_postal_code" autoComplete="postal-code" placeholder="92400" required />
+                <Input id="b-postal" name="billing_postal_code" autoComplete="postal-code" placeholder="92400" required defaultValue={state.values?.billing_postal_code ?? ""} />
               </Field>
               <Field label="Ville" htmlFor="b-city" required>
-                <Input id="b-city" name="billing_city" autoComplete="address-level2" placeholder="Courbevoie" required />
+                <Input id="b-city" name="billing_city" autoComplete="address-level2" placeholder="Courbevoie" required defaultValue={state.values?.billing_city ?? ""} />
               </Field>
               <Field label="Pays" htmlFor="b-country" required hint="Code à deux lettres : FR, BE, CH…">
-                <Input id="b-country" name="billing_country" defaultValue="FR" maxLength={2} className="uppercase" autoComplete="country" required />
+                <Input id="b-country" name="billing_country" defaultValue={state.values?.billing_country ?? "FR"} maxLength={2} className="uppercase" autoComplete="country" required />
               </Field>
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
               <Field label="Société" htmlFor="b-company" hint="Facultatif">
-                <Input id="b-company" name="billing_company" autoComplete="organization" />
+                <Input id="b-company" name="billing_company" autoComplete="organization" defaultValue={state.values?.billing_company ?? ""} />
               </Field>
               <Field label="Numéro de TVA" htmlFor="b-vat" hint="Facultatif">
-                <Input id="b-vat" name="billing_vat" placeholder="FR…" />
+                <Input id="b-vat" name="billing_vat" placeholder="FR…" defaultValue={state.values?.billing_vat ?? ""} />
               </Field>
             </div>
           </FormSection>

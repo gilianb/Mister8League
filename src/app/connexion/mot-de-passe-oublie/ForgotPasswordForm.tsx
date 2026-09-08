@@ -24,7 +24,7 @@ export default function ForgotPasswordForm() {
         <form action={action} className="space-y-4">
           {state.error && <Alert tone="error">{state.error}</Alert>}
           <Field label="E-mail" htmlFor="fp-email" required error={state.fieldErrors?.email}>
-            <Input id="fp-email" name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" required />
+            <Input id="fp-email" name="email" type="email" autoComplete="email" placeholder="vous@exemple.fr" required defaultValue={state.values?.email ?? ""} />
           </Field>
           <SubmitButton className="w-full" pendingText="Envoi…">
             Envoyer le lien

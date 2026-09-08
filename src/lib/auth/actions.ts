@@ -5,6 +5,7 @@ import { createServerSupabase } from "@/lib/supabase/server";
 import { createAdminSupabase } from "@/lib/supabase/admin";
 import { getSiteUrl } from "@/lib/env";
 import { safeNextPath } from "./paths";
+import { keepValues } from "@/lib/forms";
 import {
   normalizeBandaiId,
   normalizeEmail,
@@ -20,6 +21,14 @@ export type ActionState = {
   fieldErrors?: Record<string, string>;
   ok?: boolean;
   message?: string;
+  /**
+   * Valeurs saisies, à réafficher après une erreur.
+   *
+   * React réinitialise le formulaire dès que l'action rend la main : sans ce
+   * renvoi, l'utilisateur retrouve des champs vides et doit tout retaper.
+   * Les mots de passe n'y figurent jamais.
+   */
+  values?: Record<string, string>;
 };
 
 function str(formData: FormData, key: string): string {
@@ -75,6 +84,8 @@ export async function signUpAction(_prev: ActionState, formData: FormData): Prom
   const password = str(formData, "password");
   const bandaiRaw = str(formData, "bandai_member_id");
   const next = safeNextPath(str(formData, "next"));
+  // Tout sauf le mot de passe : une erreur ne doit pas effacer la saisie.
+  const values = keepValues(formData, ["pseudo", "full_name", "email", "bandai_member_id"]);
 
   const fieldErrors: Record<string, string> = {};
   const e1 = validatePseudo(pseudo);
@@ -87,13 +98,13 @@ export async function signUpAction(_prev: ActionState, formData: FormData): Prom
   if (e4) fieldErrors.password = e4;
   const e5 = validateBandaiId(bandaiRaw);
   if (e5) fieldErrors.bandai_member_id = e5;
-  if (Object.keys(fieldErrors).length > 0) return { fieldErrors };
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, values };
 
   const bandaiMemberId = normalizeBandaiId(bandaiRaw);
   const { pseudoTaken, bandaiTaken } = await checkAvailability({ pseudo, bandaiMemberId });
   if (pseudoTaken) fieldErrors.pseudo = "Ce pseudo est déjà pris.";
   if (bandaiTaken) fieldErrors.bandai_member_id = "Ce numéro de membre Bandai est déjà associé à un compte.";
-  if (Object.keys(fieldErrors).length > 0) return { fieldErrors };
+  if (Object.keys(fieldErrors).length > 0) return { fieldErrors, values };
 
   const supabase = await createServerSupabase();
   const emailRedirectTo = `${getSiteUrl()}/auth/callback?next=${encodeURIComponent(next)}`;
@@ -108,14 +119,14 @@ export async function signUpAction(_prev: ActionState, formData: FormData): Prom
 
   if (error) {
     if (isAlreadyRegisteredError(error.message)) {
-      return { error: "Cette adresse e-mail est déjà utilisée. Connectez-vous ou réinitialisez votre mot de passe." };
+      return { error: "Cette adresse e-mail est déjà utilisée. Connectez-vous ou réinitialisez votre mot de passe.", values };
     }
-    return { error: error.message };
+    return { error: error.message, values };
   }
 
   // Supabase renvoie un utilisateur « fantôme » sans identité quand l'e-mail existe déjà.
   if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-    return { error: "Cette adresse e-mail est déjà utilisée. Connectez-vous ou réinitialisez votre mot de passe." };
+    return { error: "Cette adresse e-mail est déjà utilisée. Connectez-vous ou réinitialisez votre mot de passe.", values };
   }
 
   if (data.session) {
@@ -130,7 +141,8 @@ export async function signInAction(_prev: ActionState, formData: FormData): Prom
   const password = str(formData, "password");
   const next = safeNextPath(str(formData, "next"));
 
-  if (!email || !password) return { error: "Indiquez votre e-mail et votre mot de passe." };
+  const values = { email };
+  if (!email || !password) return { error: "Indiquez votre e-mail et votre mot de passe.", values };
 
   const supabase = await createServerSupabase();
   const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -140,9 +152,10 @@ export async function signInAction(_prev: ActionState, formData: FormData): Prom
       return {
         error: "Votre adresse e-mail n'est pas encore confirmée. Ouvrez le lien reçu par e-mail ou demandez un nouvel envoi.",
         message: "unconfirmed",
+        values,
       };
     }
-    return { error: "E-mail ou mot de passe incorrect." };
+    return { error: "E-mail ou mot de passe incorrect.", values };
   }
   redirect(next);
 }
@@ -165,12 +178,13 @@ export async function resendConfirmationAction(email: string, next?: string): Pr
 
 export async function forgotPasswordAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
   const email = normalizeEmail(str(formData, "email"));
+  const values = keepValues(formData, ["email"]);
   const err = validateEmail(email);
-  if (err) return { fieldErrors: { email: err } };
+  if (err) return { fieldErrors: { email: err }, values };
   const supabase = await createServerSupabase();
   const redirectTo = `${getSiteUrl()}/auth/callback?next=${encodeURIComponent("/connexion/nouveau-mot-de-passe")}`;
   const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-  if (error) return { error: error.message };
+  if (error) return { error: error.message, values };
   return { ok: true, message: "Si un compte existe pour cette adresse, un e-mail de réinitialisation vient d'être envoyé." };
 }
 
