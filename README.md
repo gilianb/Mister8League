@@ -35,6 +35,25 @@ occupe ce port. Si le port est occupé : arrêter l'autre application, ou choisi
 un autre port pour la ligue via `NEXT_PUBLIC_SITE_URL` (les deux restent ainsi
 toujours cohérents).
 
+### Repli DNS en développement
+
+`npm run dev` installe un repli DNS dans le serveur de développement
+(`scripts/dns-fallback.mjs`, chargé via `NODE_OPTIONS`).
+
+Supabase est servi par Cloudflare et publie plusieurs adresses IP. Sur certains
+réseaux, une partie de ces adresses n'est pas routable : les paquets partent,
+rien ne revient. Or `getaddrinfo` — donc `fetch` — ne rend souvent qu'une seule
+de ces adresses sous Windows ; si c'est une adresse morte, il n'y a rien vers
+quoi basculer et chaque appel expire au bout de dix secondes. Cela se manifeste
+par des salves de `AuthRetryableFetchError: fetch failed` au démarrage et des
+pages qui mettent des minutes à répondre.
+
+Le repli complète le résultat de `getaddrinfo` par une vraie requête DNS, qui
+rend toutes les adresses ; le « Happy Eyeballs » de Node essaie alors la
+suivante au bout de ~250 ms. Le résultat natif reste prioritaire, donc le
+fichier `hosts` continue de faire foi. Rien de tout cela n'est actif en
+production (`next build` / `next start` ne chargent pas ce module).
+
 ## Variables d'environnement
 
 | Variable | Rôle |

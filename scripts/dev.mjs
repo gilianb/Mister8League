@@ -14,7 +14,7 @@ import { spawn } from "node:child_process";
 import net from "node:net";
 import fs from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { devPortFromSiteUrl, parseEnvFile } from "./dev-port.mjs";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -72,5 +72,17 @@ if (port !== null && !(await isPortFree(port))) {
 
 const nextBin = path.join(root, "node_modules", "next", "dist", "bin", "next");
 const args = ["dev", ...(port !== null ? ["-p", String(port)] : [])];
-const child = spawn(process.execPath, [nextBin, ...args], { stdio: "inherit", cwd: root });
+
+// Repli DNS multi-adresses (cf. scripts/dns-fallback.mjs). On passe par
+// NODE_OPTIONS plutôt que par `--import` : Next sert les requêtes depuis des
+// processus enfants, qui héritent de l'environnement mais pas des options de
+// la ligne de commande.
+const dnsFallback = pathToFileURL(path.join(root, "scripts", "dns-fallback-install.mjs")).href;
+const nodeOptions = [process.env.NODE_OPTIONS, `--import ${dnsFallback}`].filter(Boolean).join(" ");
+
+const child = spawn(process.execPath, [nextBin, ...args], {
+  stdio: "inherit",
+  cwd: root,
+  env: { ...process.env, NODE_OPTIONS: nodeOptions },
+});
 child.on("exit", (code, signal) => process.exit(signal ? 1 : (code ?? 0)));
