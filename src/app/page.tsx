@@ -74,7 +74,7 @@ export default async function Home() {
           <div className="max-w-2xl">
             {season && <p className="kicker">{season.name}</p>}
             <h1 className="mt-4 font-display text-5xl font-semibold leading-[1.02] tracking-[-0.03em] text-cream-100 sm:text-6xl lg:text-[4.5rem]">
-              La ligue One Piece de Courbevoie.
+              La ligue One Piece de Mister8 TCG.
             </h1>
             <p className="mt-6 max-w-[46ch] text-lg leading-relaxed text-cream-300">
               Chaque tournoi joué chez Mister 8 rapporte des points de ligue. En fin de saison, les {qualifiedCount} meilleurs
