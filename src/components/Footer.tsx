@@ -8,6 +8,7 @@ const LEAGUE_LINKS = [
   { href: "/joueur", label: "Mon espace joueur" },
   { href: "/reglement", label: "Règlement de la ligue" },
   { href: "/confidentialite", label: "Politique de confidentialité" },
+  { href: "/cgu", label: "Conditions générales d'utilisation" },
 ];
 
 export default function Footer() {
