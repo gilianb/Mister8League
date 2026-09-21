@@ -40,7 +40,7 @@ create table if not exists public.seasons (
   name text not null,                   -- 'Saison 2026/2027'
   starts_on date not null,
   ends_on date,
-  qualified_count int not null default 16 check (qualified_count >= 0),
+  qualified_count int not null default 12 check (qualified_count >= 0),
   status text not null default 'draft' check (status in ('draft', 'active', 'closed')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()

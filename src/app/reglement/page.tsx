@@ -39,7 +39,7 @@ function Callout({ tone = "gold", children }: { tone?: "gold" | "brand" | "rift"
 export default async function ReglementPage() {
   const season = await getActiveSeason();
   const scale = season ? await getPointScale(season.id) : [];
-  const qualifiedCount = season?.qualified_count ?? 16;
+  const qualifiedCount = season?.qualified_count ?? 12;
   const seasonName = season?.name ?? "la saison en cours";
 
   return (
@@ -133,14 +133,29 @@ export default async function ReglementPage() {
 
             <Article id="finale" index={3} title="Qualification et finale">
               <p>
-                À l&apos;issue du dernier tournoi de la saison, les <strong>{qualifiedCount} premiers joueurs</strong> du classement
-                général se qualifient pour la grande finale.
+                Une saison dure <strong>environ 4 mois</strong>. À l&apos;issue du dernier tournoi de la saison, une grande
+                finale réunit <strong>16 joueurs</strong> :
               </p>
               <ul className="list-disc space-y-2 pl-5">
-                <li>La ligne de qualification est visible en rouge sur la page « Classement » du site tout au long de l&apos;année.</li>
                 <li>
-                  En cas de désistement d&apos;un joueur qualifié, la place est automatiquement réattribuée au joueur suivant dans
-                  le classement ({qualifiedCount + 1}e, puis {qualifiedCount + 2}e, etc.).
+                  <strong>12 places pour la ligue</strong> : les 12 premiers du classement général sont qualifiés directement.
+                </li>
+                <li>
+                  <strong>4 places pour l&apos;Open</strong> : un tournoi ouvert à <strong>256 joueurs</strong> est organisé en fin
+                  de saison ; les 4 meilleurs de ce tournoi rejoignent les 16 finalistes.
+                </li>
+              </ul>
+              <p>
+                Ces 16 joueurs s&apos;affrontent dans le <strong>top cut final</strong>.
+              </p>
+              <ul className="list-disc space-y-2 pl-5">
+                <li>
+                  La ligne de qualification (top {qualifiedCount}) est visible en rouge sur la page « Classement » du site tout
+                  au long de la saison.
+                </li>
+                <li>
+                  En cas de désistement d&apos;un joueur qualifié par la ligue, la place est automatiquement réattribuée au
+                  joueur suivant dans le classement ({qualifiedCount + 1}e, puis {qualifiedCount + 2}e, etc.).
                 </li>
               </ul>
               <Callout tone="gold">

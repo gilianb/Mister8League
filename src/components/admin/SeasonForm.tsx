@@ -44,7 +44,7 @@ export default function SeasonForm({ season }: { season: SeasonRow | null }) {
             <Input id="s-end" name="ends_on" type="date" defaultValue={season?.ends_on ?? ""} />
           </Field>
           <Field label="Qualifiés pour la finale" htmlFor="s-qual" hint="0 = pas de ligne de coupe">
-            <Input id="s-qual" name="qualified_count" type="number" min={0} defaultValue={season?.qualified_count ?? 16} />
+            <Input id="s-qual" name="qualified_count" type="number" min={0} defaultValue={season?.qualified_count ?? 12} />
           </Field>
           <Field label="Statut" htmlFor="s-status" error={fe.status} hint="Une seule saison active.">
             <Select id="s-status" name="status" defaultValue={season?.status ?? "draft"}>

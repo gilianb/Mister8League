@@ -6,7 +6,7 @@ values ('one-piece', 'One Piece Card Game')
 on conflict (slug) do nothing;
 
 insert into public.seasons (game_id, slug, name, starts_on, ends_on, qualified_count, status)
-select g.id, '2026-2027', 'Saison 2026/2027', '2026-09-01', '2027-08-31', 16, 'active'
+select g.id, '2026-2027', 'Saison 2026/2027', '2026-09-01', '2027-08-31', 12, 'active'
 from public.games g
 where g.slug = 'one-piece'
 on conflict (slug) do nothing;

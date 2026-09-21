@@ -17,7 +17,7 @@ export async function saveSeasonAction(_prev: ActionState, formData: FormData): 
   const slug = slugify(formStr(formData, "slug") || name);
   const startsOn = formStr(formData, "starts_on");
   const endsOn = formStr(formData, "ends_on") || null;
-  const qualified = Math.max(0, Math.floor(Number(formStr(formData, "qualified_count") || 16)));
+  const qualified = Math.max(0, Math.floor(Number(formStr(formData, "qualified_count") || 12)));
   const status = (formStr(formData, "status") || "draft") as SeasonStatus;
 
   const fieldErrors: Record<string, string> = {};

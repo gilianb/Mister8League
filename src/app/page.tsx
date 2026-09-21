@@ -52,7 +52,7 @@ export default async function Home() {
   const [standings, scale] = season ? await Promise.all([getSeasonStandings(season.id), getPointScale(season.id)]) : [[], []];
   const top8 = standings.slice(0, 8);
   const lastEvent = completed[0];
-  const qualifiedCount = season?.qualified_count ?? 16;
+  const qualifiedCount = season?.qualified_count ?? 12;
   const topPoints = scale[0]?.points ?? 15;
   const minPoints = scale.length ? Math.min(...scale.map((r) => r.points)) : 1;
   const maxPlacement = scale.length ? Math.max(...scale.map((r) => r.placementMax ?? 64)) : 64;
