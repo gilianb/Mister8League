@@ -21,15 +21,18 @@ import { cn } from "@/lib/cn";
 
 export const dynamic = "force-dynamic";
 
+/** Nombre de joueurs affichés sur l'accueil : les places qualificatives de la ligue. */
+const HOME_TOP = 12;
+
 const dayFormat = new Intl.DateTimeFormat("fr-FR", { day: "numeric", timeZone: "Europe/Paris" });
 const monthFormat = new Intl.DateTimeFormat("fr-FR", { month: "long", timeZone: "Europe/Paris" });
 const weekdayFormat = new Intl.DateTimeFormat("fr-FR", { weekday: "long", timeZone: "Europe/Paris" });
 
-function TopEight({ rows, qualifiedCount }: { rows: StandingRow[]; qualifiedCount: number }) {
+function TopRanks({ rows, qualifiedCount }: { rows: StandingRow[]; qualifiedCount: number }) {
   return (
     <ol className="grid gap-x-12 md:grid-cols-2">
       {rows.map((r) => (
-        <li key={r.player_id} className="flex items-center gap-5 border-t hairline py-4 last:border-b md:[&:nth-child(4)]:border-b">
+        <li key={r.player_id} className="flex items-center gap-5 border-t hairline py-4 last:border-b md:[&:nth-last-child(2)]:border-b">
           <span className={cn("display-number w-12 shrink-0 text-4xl", r.rank <= qualifiedCount ? "text-gold-400" : "text-cream-500")}>{r.rank}</span>
           <div className="min-w-0 flex-1 text-[15px] font-medium text-cream-100">
             <PlayerName row={r} size={36} />
@@ -50,7 +53,7 @@ function TopEight({ rows, qualifiedCount }: { rows: StandingRow[]; qualifiedCoun
 export default async function Home() {
   const [season, nextEvent, completed, user] = await Promise.all([getActiveSeason(), getNextEvent(), listCompletedEvents(), getSessionUser()]);
   const [standings, scale] = season ? await Promise.all([getSeasonStandings(season.id), getPointScale(season.id)]) : [[], []];
-  const top8 = standings.slice(0, 8);
+  const topRanks = standings.slice(0, HOME_TOP);
   const lastEvent = completed[0];
   const qualifiedCount = season?.qualified_count ?? 12;
   const topPoints = scale[0]?.points ?? 15;
@@ -157,11 +160,11 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* ---------- Top 8 ---------- */}
+      {/* ---------- Top de la ligue ---------- */}
       <section className="page-shell py-16 sm:py-20">
         <SectionHeading
           eyebrow={season?.name}
-          title="Le top 8 de la ligue"
+          title={`Le top ${HOME_TOP} de la ligue`}
           action={
             <Link href="/classement" className="text-link text-sm">
               Classement complet
@@ -169,13 +172,13 @@ export default async function Home() {
           }
         />
         <div className="mt-8">
-          {top8.length > 0 ? (
-            <TopEight rows={top8} qualifiedCount={qualifiedCount} />
+          {topRanks.length > 0 ? (
+            <TopRanks rows={topRanks} qualifiedCount={qualifiedCount} />
           ) : (
             <EmptyState
               compact
               title="Le classement démarre au premier tournoi"
-              text="Dès que les résultats d'un tournoi de la saison sont publiés, le top 8 apparaît ici."
+              text={`Dès que les résultats d'un tournoi de la saison sont publiés, le top ${HOME_TOP} apparaît ici.`}
             />
           )}
         </div>
