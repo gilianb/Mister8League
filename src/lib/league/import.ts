@@ -188,6 +188,23 @@ export async function setRowLeader(rowId: string, leaderId: string | null): Prom
   if (error) throw new Error(error.message);
 }
 
+/** Attribue des leaders à plusieurs lignes d'un même import (liste collée). */
+export async function setRowLeadersBulk(importId: string, items: { rowId: string; leaderId: string }[]): Promise<number> {
+  if (items.length === 0) return 0;
+  const admin = createAdminSupabase();
+  const { data: rows, error } = await admin.from("result_import_rows").select("id").eq("import_id", importId);
+  if (error) throw new Error(error.message);
+  const allowed = new Set((rows ?? []).map((r: { id: string }) => r.id));
+  const valid = items.filter((it) => allowed.has(it.rowId));
+  await Promise.all(
+    valid.map(async ({ rowId, leaderId }) => {
+      const { error: e } = await admin.from("result_import_rows").update({ leader_id: leaderId }).eq("id", rowId);
+      if (e) throw new Error(e.message);
+    })
+  );
+  return valid.length;
+}
+
 export async function discardImport(importId: string): Promise<void> {
   const admin = createAdminSupabase();
   await admin.from("result_imports").update({ status: "discarded" }).eq("id", importId).eq("status", "pending");

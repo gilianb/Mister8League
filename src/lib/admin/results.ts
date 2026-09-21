@@ -3,7 +3,7 @@
 import { createAdminSupabase } from "@/lib/supabase/admin";
 import type { ActionState } from "@/lib/auth/actions";
 import { BandaiCsvError } from "@/lib/league/bandai-csv";
-import { applyImport, createImport, discardImport, resolveRow, setRowLeader, unpublishResults, type RowResolutionInput } from "@/lib/league/import";
+import { applyImport, createImport, discardImport, resolveRow, setRowLeader, setRowLeadersBulk, unpublishResults, type RowResolutionInput } from "@/lib/league/import";
 import { adminUserId, formStr, logAdminEvent } from "./guard";
 
 export async function uploadResultsAction(_prev: ActionState, formData: FormData): Promise<ActionState> {
@@ -58,6 +58,18 @@ export async function setRowLeaderAction(rowId: string, leaderId: string | null)
     return { ok: true };
   } catch (e) {
     return { error: e instanceof Error ? e.message : "Échec." };
+  }
+}
+
+export async function setRowLeadersBulkAction(importId: string, items: { rowId: string; leaderId: string }[]): Promise<ActionState> {
+  const adminId = await adminUserId();
+  if (!adminId) return { error: "Réservé aux organisateurs." };
+  try {
+    const n = await setRowLeadersBulk(importId, items);
+    await logAdminEvent({ adminId, action: "results_leaders_bulk", payload: { importId, count: n } });
+    return { ok: true, message: `${n} leader${n > 1 ? "s" : ""} attribué${n > 1 ? "s" : ""}.` };
+  } catch (e) {
+    return { error: e instanceof Error ? e.message : "Attribution impossible." };
   }
 }
 

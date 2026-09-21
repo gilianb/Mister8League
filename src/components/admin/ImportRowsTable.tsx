@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Alert";
 import { Card } from "@/components/ui/Card";
 import PlayerSearch from "./PlayerSearch";
+import LeaderListPanel from "./LeaderListPanel";
 import { cn } from "@/lib/cn";
 
 const RES_LABEL: Record<string, { label: string; tone: BadgeTone }> = {
@@ -90,6 +91,8 @@ export default function ImportRowsTable({
         </div>
       </div>
       {feedback && <Alert tone={feedback.tone}>{feedback.text}</Alert>}
+
+      <LeaderListPanel importId={importId} rows={rows} leaders={leaders} pending={pending} run={run} />
 
       {noShows.length > 0 && (
         <Card tone="subtle" padding="sm">
