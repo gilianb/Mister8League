@@ -6,10 +6,30 @@ import ResendConfirmation from "@/app/connexion/verifier-email/ResendConfirmatio
 
 export const metadata: Metadata = { title: "Problème de lien", robots: { index: false } };
 
-type Props = { searchParams: Promise<{ msg?: string; email?: string }> };
+type Props = { searchParams: Promise<{ msg?: string; email?: string; type?: string }> };
 
 export default async function AuthErrorPage({ searchParams }: Props) {
-  const { msg, email } = await searchParams;
+  const { msg, email, type } = await searchParams;
+
+  if (type === "recovery") {
+    return (
+      <AuthFrame title="Lien expiré." description={msg || "Ce lien de réinitialisation est invalide ou a expiré."}>
+        <div className="space-y-5">
+          <Alert tone="info" title="Demandez un nouveau lien">
+            Un lien de réinitialisation ne fonctionne qu&apos;une fois et expire au bout d&apos;une heure. Seul le
+            dernier lien reçu est valable.
+          </Alert>
+          <Button href="/connexion/mot-de-passe-oublie" className="w-full">
+            Recevoir un nouveau lien
+          </Button>
+          <Button href="/connexion" variant="ghost" size="sm" className="w-full">
+            Retour à la connexion
+          </Button>
+        </div>
+      </AuthFrame>
+    );
+  }
+
   return (
     <AuthFrame title="Retrouvons votre accès." description={msg || "Ce lien de confirmation est invalide ou a expiré. Voici comment retrouver votre espace joueur."}>
       <div className="space-y-5">

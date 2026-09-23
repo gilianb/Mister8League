@@ -7,6 +7,7 @@ import { Card } from "@/components/ui/Card";
 import { Spinner } from "@/components/ui/Spinner";
 import { IconCheck, IconX } from "@/components/ui/icons";
 import { Button } from "@/components/ui/Button";
+import { frenchAuthError } from "@/lib/auth/errors";
 
 /**
  * Point d'arrivée des liens d'e-mail Supabase :
@@ -18,6 +19,7 @@ export default function CallbackClient({ nextPath }: { nextPath: string }) {
   const router = useRouter();
   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
   const [message, setMessage] = useState<string | null>(null);
+  const isRecovery = nextPath.startsWith("/connexion/nouveau-mot-de-passe");
 
   useEffect(() => {
     let cancelled = false;
@@ -59,7 +61,7 @@ export default function CallbackClient({ nextPath }: { nextPath: string }) {
       } catch (e) {
         if (cancelled) return;
         setStatus("error");
-        setMessage(e instanceof Error ? e.message : "Erreur inattendue.");
+        setMessage(e instanceof Error ? frenchAuthError(e.message) : "Erreur inattendue.");
       }
     })();
     return () => {
@@ -99,8 +101,8 @@ export default function CallbackClient({ nextPath }: { nextPath: string }) {
               <Button href="/connexion" variant="outline" size="sm">
                 Se connecter
               </Button>
-              <Button href="/auth/erreur" variant="ghost" size="sm">
-                Renvoyer un lien
+              <Button href={isRecovery ? "/connexion/mot-de-passe-oublie" : "/auth/erreur"} variant="ghost" size="sm">
+                {isRecovery ? "Recevoir un nouveau lien" : "Renvoyer un lien"}
               </Button>
             </div>
           </>

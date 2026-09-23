@@ -6,6 +6,7 @@ import { createAdminSupabase } from "@/lib/supabase/admin";
 import { getSiteUrl } from "@/lib/env";
 import { safeNextPath } from "./paths";
 import { keepValues } from "@/lib/forms";
+import { frenchAuthError } from "./errors";
 import {
   normalizeBandaiId,
   normalizeEmail,
@@ -172,7 +173,7 @@ export async function resendConfirmationAction(email: string, next?: string): Pr
   const supabase = await createServerSupabase();
   const emailRedirectTo = `${getSiteUrl()}/auth/callback?next=${encodeURIComponent(safeNextPath(next))}`;
   const { error } = await supabase.auth.resend({ type: "signup", email: cleaned, options: { emailRedirectTo } });
-  if (error) return { error: error.message };
+  if (error) return { error: frenchAuthError(error.message) };
   return { ok: true, message: "E-mail de confirmation renvoyé. Pensez à vérifier vos spams." };
 }
 
@@ -184,7 +185,7 @@ export async function forgotPasswordAction(_prev: ActionState, formData: FormDat
   const supabase = await createServerSupabase();
   const redirectTo = `${getSiteUrl()}/auth/callback?next=${encodeURIComponent("/connexion/nouveau-mot-de-passe")}`;
   const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
-  if (error) return { error: error.message, values };
+  if (error) return { error: frenchAuthError(error.message), values };
   return { ok: true, message: "Si un compte existe pour cette adresse, un e-mail de réinitialisation vient d'être envoyé." };
 }
 
@@ -201,6 +202,6 @@ export async function updatePasswordAction(_prev: ActionState, formData: FormDat
     return { error: "Session introuvable. Ouvrez à nouveau le lien reçu par e-mail." };
   }
   const { error } = await supabase.auth.updateUser({ password });
-  if (error) return { error: error.message };
+  if (error) return { error: frenchAuthError(error.message) };
   redirect("/joueur?message=mot-de-passe");
 }

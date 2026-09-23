@@ -3,6 +3,8 @@ import { getSessionWithProfile } from "@/lib/auth/session";
 import { safeNextPath } from "@/lib/auth/paths";
 import { Alert } from "@/components/ui/Alert";
 import { PageHeader } from "@/components/ui/PageHeader";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
 import ProfileForm from "./ProfileForm";
 import AvatarForm from "./AvatarForm";
 
@@ -44,6 +46,15 @@ export default async function ProfilPage({ searchParams }: Props) {
         email={user.email ?? ""}
         next={next}
       />
+      <Card padding="lg" className="flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <h2 className="font-display text-xl font-medium tracking-tight text-cream-100">Mot de passe</h2>
+          <p className="mt-1 text-[13px] text-cream-500">Choisissez un nouveau mot de passe pour votre compte.</p>
+        </div>
+        <Button href="/connexion/nouveau-mot-de-passe" variant="outline" size="sm">
+          Changer mon mot de passe
+        </Button>
+      </Card>
     </div>
   );
 }

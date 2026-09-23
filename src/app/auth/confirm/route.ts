@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { safeNextPath } from "@/lib/auth/paths";
+import { frenchAuthError } from "@/lib/auth/errors";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -43,7 +44,9 @@ export async function GET(request: NextRequest) {
 
   const { error } = await supabase.auth.verifyOtp({ token_hash: tokenHash, type });
   if (error) {
-    return NextResponse.redirect(new URL(`/auth/erreur?msg=${encodeURIComponent(error.message)}`, url.origin));
+    const params = new URLSearchParams({ msg: frenchAuthError(error.message) });
+    if (type === "recovery") params.set("type", "recovery");
+    return NextResponse.redirect(new URL(`/auth/erreur?${params}`, url.origin));
   }
   return response;
 }
