@@ -73,9 +73,12 @@ production (`next build` / `next start` ne chargent pas ce module).
 1. Créer un projet (région Paris `eu-west-3`).
 2. Éditeur SQL : exécuter dans l'ordre `supabase/migrations/0001_schema.sql`,
    `0002_seed.sql` (jeu One Piece, saison 2026/2027 active, barème
-   15/10/8/6/4/2/1), `0003_leaders.sql` (catalogue des leaders avec visuels).
+   15/10/8/6/4/2/1), `0003_leaders.sql` (catalogue initial des leaders),
+   `0004_leader_images.sql` (bucket des visuels de leaders, corrections).
    Les scripts sont idempotents. Ils créent aussi les buckets Storage
-   (`tournament-tickets` privé, `avatars` et `event-covers` publics).
+   (`tournament-tickets` privé, `avatars`, `event-covers` et `leader-images`
+   publics). Ensuite, **/admin/leaders → Synchroniser** ajoute les leaders
+   récents et copie les visuels dans Storage.
 3. **Authentication → URL Configuration** : `Site URL` = votre
    `NEXT_PUBLIC_SITE_URL`, et ajouter `https://votre-site/**` (et
    `http://localhost:3000/**`) aux Redirect URLs.
@@ -159,6 +162,11 @@ l'identité ligue (`players`) dès que le numéro Bandai est connu.
   espaces joueurs et profils publics sont mis à jour.
 - `/admin/joueurs` : rattacher un joueur importé à un compte, corriger un
   numéro Bandai, fusionner deux identités.
+- `/admin/leaders` : à chaque nouvelle extension, « Synchroniser » lit
+  optcgapi.com, ajoute les leaders manquants et copie leurs visuels dans le
+  bucket `leader-images`. Les leaders existants ne sont jamais écrasés : les
+  écarts avec l'API sont listés, et chaque leader se corrige à la main (nom,
+  couleurs). La table `leaders` est la seule source de vérité.
 
 ### Espace joueur
 `/joueur` (statut de qualification, stats, historique, inscriptions, decks),
@@ -176,7 +184,8 @@ src/lib/league/           parseur Bandai, barème, rapprochement, import
 src/lib/tournaments/      états, réservation/paiement (actions), billet PDF, check-in
 src/lib/payments/         Mollie, factures, fulfil (facture + billet + e-mails)
 src/lib/email/            SMTP, gabarits
-src/lib/admin/            actions admin (tournois, inscriptions, résultats, saisons, joueurs)
+src/lib/admin/            actions admin (tournois, inscriptions, résultats, saisons, joueurs, leaders)
+src/lib/leaders/          normalisation optcgapi, constantes Storage
 supabase/migrations/      schéma complet, seed, leaders
 tests/                    tests node:test des modules purs
 ```

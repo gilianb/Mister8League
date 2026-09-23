@@ -1,4 +1,7 @@
--- Leaders One Piece Card Game (généré par scripts/build-leaders-catalog.mjs)
+-- Leaders One Piece Card Game : catalogue initial.
+-- Les nouveaux leaders et les visuels (Supabase Storage) arrivent ensuite par
+-- la synchronisation /admin/leaders. « do nothing » : relancer ce seed ne doit
+-- pas écraser les corrections ni les images migrées.
 
 insert into leaders (game_id, code, name, colors, image_url)
 select g.id, v.code, v.name, v.colors, v.image_url
@@ -24,7 +27,7 @@ cross join (values
   ('OP02-026', 'Sanji', array['Vert', 'Bleu']::text[], '/leaders/OP02-026.jpg'),
   ('OP02-049', 'Emporio.Ivankov', array['Bleu']::text[], '/leaders/OP02-049.jpg'),
   ('OP02-071', 'Magellan', array['Violet']::text[], '/leaders/OP02-071.jpg'),
-  ('OP02-072', 'Zephyr', array['Noir']::text[], '/leaders/OP02-072.jpg'),
+  ('OP02-072', 'Zephyr', array['Violet', 'Noir']::text[], '/leaders/OP02-072.jpg'),
   ('OP02-093', 'Smoker', array['Noir']::text[], '/leaders/OP02-093.jpg'),
   ('OP03-001', 'Portgas.D.Ace', array['Rouge']::text[], '/leaders/OP03-001.jpg'),
   ('OP03-021', 'Kuro', array['Vert']::text[], '/leaders/OP03-021.jpg'),
@@ -36,17 +39,17 @@ cross join (values
   ('OP03-099', 'Charlotte Katakuri', array['Jaune']::text[], '/leaders/OP03-099.jpg'),
   ('OP04-001', 'Nefeltari Vivi', array['Rouge', 'Bleu']::text[], '/leaders/OP04-001.jpg'),
   ('OP04-019', 'Donquixote Doflamingo', array['Vert', 'Violet']::text[], '/leaders/OP04-019.jpg'),
-  ('OP04-020', 'Issho', array['Vert', 'Violet']::text[], '/leaders/OP04-020.jpg'),
+  ('OP04-020', 'Issho', array['Vert', 'Noir']::text[], '/leaders/OP04-020.jpg'),
   ('OP04-039', 'Rebecca', array['Bleu', 'Noir']::text[], '/leaders/OP04-039.jpg'),
   ('OP04-040', 'Queen', array['Bleu', 'Jaune']::text[], '/leaders/OP04-040.jpg'),
   ('OP04-058', 'Crocodile', array['Violet', 'Jaune']::text[], '/leaders/OP04-058.jpg'),
   ('OP05-001', 'Sabo', array['Rouge', 'Noir']::text[], '/leaders/OP05-001.jpg'),
   ('OP05-002', 'Belo Betty', array['Rouge', 'Jaune']::text[], '/leaders/OP05-002.jpg'),
-  ('OP05-022', 'Donquixote Rosinante', array['Vert']::text[], '/leaders/OP05-022.jpg'),
+  ('OP05-022', 'Donquixote Rosinante', array['Vert', 'Bleu']::text[], '/leaders/OP05-022.jpg'),
   ('OP05-041', 'Sakazuki', array['Bleu', 'Noir']::text[], '/leaders/OP05-041.jpg'),
-  ('OP05-060', 'Monkey.D.Luffy', array['Violet', 'Noir']::text[], '/leaders/OP05-060.jpg'),
+  ('OP05-060', 'Monkey.D.Luffy', array['Violet']::text[], '/leaders/OP05-060.jpg'),
   ('OP05-098', 'Enel', array['Jaune']::text[], '/leaders/OP05-098.jpg'),
-  ('OP06-001', 'Uta', array['Rouge']::text[], '/leaders/OP06-001.jpg'),
+  ('OP06-001', 'Uta', array['Rouge', 'Violet']::text[], '/leaders/OP06-001.jpg'),
   ('OP06-020', 'Hody Jones', array['Vert']::text[], '/leaders/OP06-020.jpg'),
   ('OP06-021', 'Perona', array['Vert', 'Noir']::text[], '/leaders/OP06-021.jpg'),
   ('OP06-022', 'Yamato', array['Vert', 'Jaune']::text[], '/leaders/OP06-022.png'),
@@ -90,8 +93,8 @@ cross join (values
   ('OP12-081', 'Koala', array['Noir', 'Jaune']::text[], '/leaders/OP12-081.jpg'),
   ('OP13-001', 'Monkey.D.Luffy', array['Rouge', 'Vert']::text[], '/leaders/OP13-001.jpg'),
   ('OP13-002', 'Portgas.D.Ace', array['Rouge', 'Bleu']::text[], '/leaders/OP13-002.jpg'),
-  ('OP13-003', 'Gol.D.Roger', array['Rouge']::text[], '/leaders/OP13-003.jpg'),
-  ('OP13-004', 'Sabo', array['Rouge']::text[], '/leaders/OP13-004.jpg'),
+  ('OP13-003', 'Gol.D.Roger', array['Rouge', 'Violet']::text[], '/leaders/OP13-003.jpg'),
+  ('OP13-004', 'Sabo', array['Rouge', 'Noir']::text[], '/leaders/OP13-004.jpg'),
   ('OP13-079', 'Imu', array['Noir']::text[], '/leaders/OP13-079.jpg'),
   ('OP13-100', 'Jewelry Bonney', array['Jaune']::text[], '/leaders/OP13-100.jpg'),
   ('OP14-001', 'Trafalgar Law', array['Rouge']::text[], '/leaders/OP14-001.png'),
@@ -138,5 +141,4 @@ cross join (values
   ('ST30-001', 'Luffy & Ace', array['Rouge', 'Vert']::text[], '/leaders/ST30-001.jpg')
 ) as v(code, name, colors, image_url)
 where g.slug = 'one-piece'
-on conflict (game_id, code) do update
-  set name = excluded.name, colors = excluded.colors, image_url = excluded.image_url;
+on conflict (game_id, code) do nothing;

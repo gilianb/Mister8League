@@ -6,15 +6,7 @@ import type { LeaderOption } from "@/lib/db/leaders";
 import { Input } from "./ui/Field";
 import { cn } from "@/lib/cn";
 import { IconX } from "./ui/icons";
-
-const COLOR_DOT: Record<string, string> = {
-  Rouge: "#d63a2a",
-  Vert: "#3f9a55",
-  Bleu: "#3a74c4",
-  Violet: "#7d4fb0",
-  Noir: "#2a2a2a",
-  Jaune: "#e5c23a",
-};
+import { LEADER_COLOR_HEX as COLOR_DOT } from "@/lib/leaders/storage";
 
 /**
  * Sélecteur de leader avec recherche et vignettes. Champ de formulaire :

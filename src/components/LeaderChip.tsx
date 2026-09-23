@@ -1,12 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
-import { getLeader } from "@/lib/data/leaders";
 import { cn } from "@/lib/cn";
 
 type Props = {
-  code?: string | null;
-  /** Nom affiché (sinon celui du catalogue) */
+  /** Nom du leader (table `leaders`) */
   name?: string | null;
-  /** Visuel (sinon celui du catalogue statique, via le code) */
+  /** Visuel (table `leaders`, Supabase Storage) */
   imageUrl?: string | null;
   size?: number;
   hideName?: boolean;
@@ -14,17 +12,13 @@ type Props = {
 };
 
 /** Vignette de carte leader + nom, utilisée dans les tableaux et légendes. */
-export default function LeaderChip({ code, name, imageUrl, size = 28, hideName = false, className }: Props) {
-  const catalog = code ? getLeader(code) : undefined;
-  const src = imageUrl ?? catalog?.image ?? null;
-  const label = name ?? catalog?.name ?? null;
-
+export default function LeaderChip({ name, imageUrl, size = 28, hideName = false, className }: Props) {
   return (
     <span className={cn("inline-flex items-center gap-2 min-w-0 align-middle", className)}>
-      {src ? (
+      {imageUrl ? (
         <img
-          src={src}
-          alt={label ?? ""}
+          src={imageUrl}
+          alt={name ?? ""}
           width={size}
           height={size}
           loading="lazy"
@@ -38,7 +32,7 @@ export default function LeaderChip({ code, name, imageUrl, size = 28, hideName =
           aria-hidden="true"
         />
       )}
-      {!hideName && <span className="truncate">{label ?? "—"}</span>}
+      {!hideName && <span className="truncate">{name ?? "—"}</span>}
     </span>
   );
 }

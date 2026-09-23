@@ -25,7 +25,7 @@ export function HistoryList({ history, title = "Tournois joués" }: { history: P
                     Bilan {h.wins ?? 0}-{h.losses ?? 0}
                     {(h.draws ?? 0) > 0 ? `-${h.draws}` : ""}
                   </span>
-                  {h.leader_id && <LeaderChip code={h.leader_code} name={h.leader_name} imageUrl={h.leader_image_url} size={20} />}
+                  {h.leader_id && <LeaderChip name={h.leader_name} imageUrl={h.leader_image_url} size={20} />}
                 </p>
               </div>
               <span className="display-number text-xl text-cream-100">
@@ -52,7 +52,7 @@ export function DeckStatsList({ stats, title = "Leaders joués en tournoi" }: { 
           return (
             <li key={`${d.leader_id}-${d.season_id}`} className="flex flex-wrap items-center gap-x-5 gap-y-2 py-4">
               <span className="min-w-40 flex-1 font-medium text-cream-100">
-                <LeaderChip code={d.leader_code} name={d.leader_name} imageUrl={d.leader_image_url} size={44} />
+                <LeaderChip name={d.leader_name} imageUrl={d.leader_image_url} size={44} />
               </span>
               <span className="text-xs text-cream-500">
                 {d.events_played} tournoi{d.events_played > 1 ? "s" : ""}, meilleur résultat {placementLabel(d.best_placement)}, {d.total_points} pts

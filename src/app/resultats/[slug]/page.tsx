@@ -61,7 +61,7 @@ export default async function ResultatDetailPage({ params }: Props) {
                 <PlayerName row={r} size={40} />
               </div>
               <div className="mt-3 text-sm text-cream-400">
-                <LeaderChip code={r.leader_code} name={r.leader_name} imageUrl={r.leader_image_url} size={26} />
+                <LeaderChip name={r.leader_name} imageUrl={r.leader_image_url} size={26} />
               </div>
               <p className="tabular mt-3 text-xs text-cream-500">
                 Bilan {record(r)}, <span className="font-semibold text-cream-300">+{r.league_points} pts</span>
@@ -106,7 +106,7 @@ export default async function ResultatDetailPage({ params }: Props) {
                     <PlayerName row={r} size={28} />
                   </td>
                   <td className="hidden py-3 pr-3 text-cream-400 sm:table-cell">
-                    <LeaderChip code={r.leader_code} name={r.leader_name} imageUrl={r.leader_image_url} />
+                    <LeaderChip name={r.leader_name} imageUrl={r.leader_image_url} />
                   </td>
                   <td className="py-3 pr-3 text-right text-cream-400">{record(r)}</td>
                   <td className="hidden py-3 pr-3 text-right text-cream-500 md:table-cell">{r.omw_pct != null ? Number(r.omw_pct).toFixed(1) : "—"}</td>

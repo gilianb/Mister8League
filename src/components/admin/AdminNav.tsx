@@ -9,6 +9,7 @@ const ITEMS = [
   { href: "/admin/tournois", label: "Tournois" },
   { href: "/admin/joueurs", label: "Joueurs" },
   { href: "/admin/saisons", label: "Saisons et barème" },
+  { href: "/admin/leaders", label: "Leaders" },
 ];
 
 export default function AdminNav() {

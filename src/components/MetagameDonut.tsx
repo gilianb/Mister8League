@@ -94,7 +94,7 @@ export default function MetagameDonut({ slices, title = "JOUEURS" }: { slices: M
           <li key={i} className="flex items-center gap-2.5">
             <span className="inline-block w-3 h-3 rounded-full shrink-0" style={{ background: s.color }} aria-hidden="true" />
             <span className="text-cream-100 font-medium truncate flex-1 min-w-0">
-              <LeaderChip code={s.leaderCode} name={s.leaderName} imageUrl={s.imageUrl} size={30} />
+              <LeaderChip name={s.leaderName} imageUrl={s.imageUrl} size={30} />
             </span>
             <span className="text-xs text-cream-600 hidden sm:inline shrink-0">meilleur : {s.bestPlacement === 1 ? "1er" : `${s.bestPlacement}e`}</span>
             <span className="text-cream-400 tabular shrink-0">
