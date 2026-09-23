@@ -83,6 +83,12 @@ export default async function ReglementPage() {
                 s&apos;additionnent tout au long de la saison pour former le classement général.
               </p>
               <p>
+                La ligue compte <strong>deux saisons par an</strong>, d&apos;environ quatre mois chacune : une saison
+                d&apos;automne, de <strong>septembre à fin décembre</strong>, et une saison de printemps, de{" "}
+                <strong>début mars à fin juin</strong> (dates indicatives, précisées à l&apos;ouverture de chaque saison).
+                Chaque saison a son propre classement et sa propre finale.
+              </p>
+              <p>
                 <strong>Départage :</strong> en cas d&apos;égalité de points au classement général, le meilleur placement
                 individuel obtenu lors d&apos;un tournoi sur la saison sert de critère de départage.
               </p>
@@ -133,7 +139,7 @@ export default async function ReglementPage() {
 
             <Article id="finale" index={3} title="Qualification et finale">
               <p>
-                Une saison dure <strong>environ 4 mois</strong>. À l&apos;issue du dernier tournoi de la saison, une grande
+                À l&apos;issue du dernier tournoi de la saison, une grande
                 finale réunit <strong>16 joueurs</strong> :
               </p>
               <ul className="list-disc space-y-2 pl-5">
