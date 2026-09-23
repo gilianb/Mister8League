@@ -78,7 +78,8 @@ export default async function ReglementPage() {
           <article className="max-w-3xl">
             <Article id="saison" index={1} title="La saison">
               <p>
-                La {seasonName} regroupe l&apos;ensemble des tournois One Piece Card Game officiellement organisés par Mister 8
+                La {seasonName}{" "}
+                regroupe l&apos;ensemble des tournois One Piece Card Game officiellement organisés par Mister 8
                 TCG. Chaque tournoi joué rapporte des points de ligue selon votre classement final. Ces points
                 s&apos;additionnent tout au long de la saison pour former le classement général.
               </p>
